@@ -42,6 +42,9 @@ internal class TrainingFlowViewModel : BaseViewModel() {
 
     internal val completeTrainingStateFlow = _trainingCompletedStateFlow.asStateFlow()
 
+    private val _isRefreshing = MutableStateFlow(false)
+    internal val isRefreshing = _isRefreshing.asStateFlow()
+
     private var authenticationToken: String = ""
 
     internal var selectedFlow: FlowDetailsResponseContent? = null
@@ -49,22 +52,25 @@ internal class TrainingFlowViewModel : BaseViewModel() {
     internal var currentStepIndex: Int? by mutableStateOf(null)
 
 
-    internal var isFlowListRefreshing: Boolean by mutableStateOf(false)
-
-
     fun getFlowsList(context: Context, authToken: String, packageName: String) {
         authenticationToken = authToken
-        if (_flowsListDetailStateFlow.value is DataUiResponseStatus.Success && isFlowListRefreshing) return
-        isFlowListRefreshing = true
+        if (_flowsListDetailStateFlow.value is DataUiResponseStatus.Success) return
         _flowsListDetailStateFlow.value = DataUiResponseStatus.Companion.loading()
         backgroundCall {
-            val response = GetFlowsListUseCase().invoke(context, packageName, authenticationToken)
-                .mapToDataUiResponseStatus()
-            withContext(Dispatchers.Main) {
-                isFlowListRefreshing = false
-            }
-            _flowsListDetailStateFlow.value = response
+            _flowsListDetailStateFlow.value =
+                GetFlowsListUseCase().invoke(context, packageName, authenticationToken)
+                    .mapToDataUiResponseStatus()
+        }
+    }
 
+    fun refreshFlowsList(context: Context, authToken: String, packageName: String) {
+        authenticationToken = authToken
+        _isRefreshing.value = true
+        backgroundCall {
+            val result = GetFlowsListUseCase().invoke(context, packageName, authenticationToken)
+                .mapToDataUiResponseStatus()
+            _flowsListDetailStateFlow.value = result
+            _isRefreshing.value = false
         }
     }
 

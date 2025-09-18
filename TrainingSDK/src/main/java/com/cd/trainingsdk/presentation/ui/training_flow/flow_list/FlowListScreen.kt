@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -80,11 +79,7 @@ internal fun FlowListScreen(
     onBackClicked: () -> Unit,
 ) {
     val context = LocalContext.current
-    PullToRefreshBox(
-        isRefreshing = viewModel.isFlowListRefreshing,
-        onRefresh = {
-            viewModel.getFlowsList(context, authToken, packageName)
-        },
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
@@ -162,10 +157,10 @@ private fun HandleFlowListStateFlow(
     var isResponseHandled by remember { mutableStateOf(false) }
     when (val response = flowListResponseState.value) {
         is DataUiResponseStatus.Loading -> {
+            // Show loading section for first load, but for refresh keep existing data visible
             isResponseHandled = false
             LoadingSection()
         }
-
 
         is DataUiResponseStatus.Success -> {
             if (response.data.isEmpty()) {
@@ -182,10 +177,11 @@ private fun HandleFlowListStateFlow(
                 FlowsList(
                     appName = appName,
                     flows = response.data,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    authToken = authToken,
+                    packageName = packageName
                 )
             }
-
         }
 
         is DataUiResponseStatus.Failure -> {
@@ -218,70 +214,86 @@ private fun HandleFlowListStateFlow(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FlowsList(
     appName: String,
     flows: List<FlowListResponseContent>,
     viewModel: TrainingFlowViewModel,
+    authToken: String,
+    packageName: String,
 ) {
 
     val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+    val isRefreshingState = viewModel.isRefreshing.collectAsStateWithLifecycle()
+
+    PullToRefreshBox(
+        isRefreshing = isRefreshingState.value,
+        onRefresh = {
+            viewModel.refreshFlowsList(context, authToken, packageName)
+        },
+        modifier = Modifier.fillMaxSize()
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.22f)
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primary,
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                                MaterialTheme.colorScheme.secondary
-                            ),
-                            start = Offset(0f, 0f),
-                            end = Offset(1000f, 1000f)
-                        )
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .offset(x = (-40).dp, y = (-40).dp)
-                    .background(
-                        color = Color.White.copy(alpha = 0.1f),
-                        shape = CircleShape
-                    )
-            )
-
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .align(Alignment.TopEnd)
-                    .offset(x = 40.dp, y = 20.dp)
-                    .background(
-                        color = Color.White.copy(alpha = 0.08f),
-                        shape = CircleShape
-                    )
-            )
-
-            HeaderSection(
-                appName, Modifier
-                    .fillMaxWidth()
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 16.dp)
-            )
-        }
-        StatusCard(flows)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                ) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            MaterialTheme.colorScheme.primary,
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                                            MaterialTheme.colorScheme.secondary
+                                        ),
+                                        start = Offset(0f, 0f),
+                                        end = Offset(1000f, 1000f)
+                                    )
+                                )
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .offset(x = (-40).dp, y = (-40).dp)
+                                .background(
+                                    color = Color.White.copy(alpha = 0.1f),
+                                    shape = CircleShape
+                                )
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .align(Alignment.TopEnd)
+                                .offset(x = 40.dp, y = 20.dp)
+                                .background(
+                                    color = Color.White.copy(alpha = 0.08f),
+                                    shape = CircleShape
+                                )
+                        )
+
+                        HeaderSection(
+                            appName, Modifier
+                                .fillMaxWidth()
+                                .windowInsetsPadding(WindowInsets.statusBars)
+                                .padding(horizontal = 20.dp)
+                                .padding(top = 16.dp)
+                        )
+                    }
+                    StatusCard(flows)
+                }
+            }
+
             items(flows) { flow ->
                 FlowItem(
                     flow = flow,
