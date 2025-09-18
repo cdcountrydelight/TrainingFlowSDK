@@ -433,7 +433,7 @@ private fun StatusCardItem(text: String, count: Int) {
             text = "$count",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.tertiary
+            color = MaterialTheme.colorScheme.primary
         )
         Text(
             text = text,
