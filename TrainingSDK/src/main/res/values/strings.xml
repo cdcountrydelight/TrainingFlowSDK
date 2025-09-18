@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">CD Training app</string>
+
+    <string name="error">Error</string>
+    <string name="something_went_wrong_please_try_again_later">Something went wrong, please try again later</string>
+    <string name="no_internet_connection_please_make_sure_your_device_is_connected_to_an_active_internet_connection">No internet connection. Please make sure your device is connected to an active internet connection.</string>
+    <string name="try_again">Try Again</string>
+    <string name="cancel">Cancel</string>
+    <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number.</string>
+    <string name="list_of_the_flows_available_for_this_app">List of the flows available for this app</string>
+    <string name="ok" tools:ignore="ButtonCase">Ok</string>
+    <string name="no_description_available">No description available</string>
+    <string name="steps">%1$d steps</string>
+    <string name="untitled_flow">Untitled Flow</string>
+    <string name="in_progress_text">In Progress</string>
+    <string name="completed">Completed</string>
+    <string name="available_flows">Available Flows</string>
+    <string name="training_platform">Training Platform</string>
+    <string name="not_started">Not Started</string>
+    <string name="no_training_flows_available">No training flows available</string>
+    <string name="go_back">Go Back</string>
+    <string name="there_are_currently_no_training_flows_configured_for_please_check_back_later_or_contact_your_administrator">There are currently no training flows configured for %1$s. Please check back later or contact your administrator.</string>
+    <string name="flow_details_not_found">Flow Details Not Found</string>
+    <string name="no_steps_available">No steps available</string>
+    <string name="this_training_flow_doesn_t_have_any_steps_configured_yet">This training flow doesn\'t have any steps configured yet.</string>
+    <string name="start_next_flow">Start Next Flow</string>
+    <string name="go_to_home">Go To Home</string>
+    <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">Congratulations! You have successfully completed this training. You can revisit this training anytime from the flow list.</string>
+</resources>
