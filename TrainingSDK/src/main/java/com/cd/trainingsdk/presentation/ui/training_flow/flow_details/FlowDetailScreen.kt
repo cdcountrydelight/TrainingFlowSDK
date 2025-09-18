@@ -1,6 +1,7 @@
 package com.cd.trainingsdk.presentation.ui.training_flow.flow_details
 
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -27,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -94,6 +94,11 @@ internal fun FlowDetailScreen(
 
     val context = LocalContext.current
 
+    BackHandler {
+        viewModel.showToolTip = false
+        onBackClicked()
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         if (viewModel.selectedFlow == null || currentStep == null) {
             EmptySection(
@@ -104,11 +109,13 @@ internal fun FlowDetailScreen(
             )
         } else {
             StepDetailContent(
+                viewModel = viewModel,
                 step = currentStep,
                 onAnnotationClick = {
                     if (currentStepIndex < steps.size - 1) {
                         currentStepIndex++
                     } else {
+                        viewModel.showToolTip = false
                         viewModel.completeTraining(viewModel.selectedFlow?.id ?: 0, context)
                         onNavigateToTrainingCompleted()
                     }
@@ -117,10 +124,14 @@ internal fun FlowDetailScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.showToolTip = true
+    }
 }
 
 @Composable
 private fun StepDetailContent(
+    viewModel: TrainingFlowViewModel,
     step: StepsResponseContent,
     onAnnotationClick: () -> Unit
 ) {
@@ -150,6 +161,7 @@ private fun StepDetailContent(
 
         is AsyncImagePainter.State.Success -> {
             ScreenWithOverlays(
+                viewModel = viewModel,
                 painter = painter,
                 step = step,
                 onActionClick = onAnnotationClick
@@ -178,6 +190,7 @@ private fun ErrorSection() {
 
 @Composable
 private fun ScreenWithOverlays(
+    viewModel: TrainingFlowViewModel,
     painter: Painter,
     step: StepsResponseContent,
     onActionClick: () -> Unit,
@@ -246,6 +259,7 @@ private fun ScreenWithOverlays(
             if (!step.annotation?.annotations.isNullOrEmpty()) {
                 val annotation = step.annotation.annotations.first()
                 AnimatedActionOverlay(
+                    viewModel = viewModel,
                     step = step,
                     annotation = annotation,
                     scaleFactor = scaleFactor,
@@ -262,6 +276,7 @@ private fun ScreenWithOverlays(
 
 @Composable
 private fun AnimatedActionOverlay(
+    viewModel: TrainingFlowViewModel,
     step: StepsResponseContent,
     annotation: AnnotationItemResponseContent,
     scaleFactor: Double,
@@ -270,7 +285,6 @@ private fun AnimatedActionOverlay(
     density: Density,
     onActionClick: () -> Unit,
 ) {
-    var showTooltip by remember { mutableStateOf(true) }
     val backgroundColor = Color.Transparent
     val borderDetails = getBorderDetails(annotation, scaleFactor, density)
     val shapeDetails = getShapeDetails(annotation, density, scaleFactor)
@@ -340,8 +354,8 @@ private fun AnimatedActionOverlay(
 
             if (step.instructions.isNotEmpty()) {
                 DropdownMenu(
-                    expanded = showTooltip,
-                    onDismissRequest = { showTooltip = false },
+                    expanded = viewModel.showToolTip,
+                    onDismissRequest = { viewModel.showToolTip = false },
                     offset = DpOffset(0.dp, 8.dp),
                     containerColor = Color.White,
                     shape = RoundedCornerShape(16.dp),
@@ -352,12 +366,6 @@ private fun AnimatedActionOverlay(
                     modifier = Modifier.fillMaxWidth(0.85f)
                 ) {
                     InstructionsSection(step)
-                }
-            }
-
-            DisposableEffect(Unit) {
-                onDispose {
-                    showTooltip = false
                 }
             }
         }

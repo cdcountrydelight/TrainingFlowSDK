@@ -51,6 +51,8 @@ internal class TrainingFlowViewModel : BaseViewModel() {
 
     internal var currentStepIndex: Int? by mutableStateOf(null)
 
+    internal var showToolTip: Boolean by mutableStateOf(true)
+
 
     fun getFlowsList(context: Context, authToken: String, packageName: String) {
         authenticationToken = authToken

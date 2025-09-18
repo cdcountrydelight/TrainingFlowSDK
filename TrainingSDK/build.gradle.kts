@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    id("maven-publish")
 }
 
 android {
@@ -33,6 +34,20 @@ android {
         jvmTarget = "11"
     }
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                groupId = "com.github.cdcountrydelight"
+                artifactId = "TrainingSDK"
+                version = "1.0.0"
+                from(components["release"])
+            }
+        }
+    }
+}
+
 
 dependencies {
 
