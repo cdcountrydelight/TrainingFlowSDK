@@ -298,6 +298,7 @@ private fun FlowsList(
                 FlowItem(
                     flow = flow,
                     onClick = {
+                        flow.userProgress?.isStarted = true
                         viewModel.getFlowDetails(flow.id, context)
                     }
                 )
