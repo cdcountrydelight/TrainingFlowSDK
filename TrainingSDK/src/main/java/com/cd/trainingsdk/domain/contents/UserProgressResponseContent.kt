@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class UserProgressResponseContent(
-    val isStarted: Boolean? = null,
+    var isStarted: Boolean? = null,
     val isCompleted: Boolean? = null,
     val startedAt: String? = null,
     val completedAt: String? = null,
