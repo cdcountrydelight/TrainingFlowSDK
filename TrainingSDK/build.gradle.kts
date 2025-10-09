@@ -41,7 +41,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 groupId = "com.github.cdcountrydelight"
                 artifactId = "TrainingSDK"
-                version = "1.0.1"
+                version = "1.0.2"
                 from(components["release"])
             }
         }
