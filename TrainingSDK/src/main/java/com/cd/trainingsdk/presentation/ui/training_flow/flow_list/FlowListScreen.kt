@@ -516,7 +516,7 @@ private fun FlowItem(
 
                 SpacerHeight4()
                 Text(
-                    text = flow.description ?: stringResource(R.string.no_description_available),
+                    text = flow.description?.ifBlank {stringResource(R.string.no_description_available) } ?: stringResource(R.string.no_description_available),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
