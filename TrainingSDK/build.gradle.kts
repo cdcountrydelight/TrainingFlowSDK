@@ -41,7 +41,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 groupId = "com.github.cdcountrydelight"
                 artifactId = "TrainingSDK"
-                version = "1.0.1"
+                version = "1.0.2"
                 from(components["release"])
             }
         }
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.compose.material.icons.core)
 
     testImplementation(libs.junit)
 

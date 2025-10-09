@@ -12,7 +12,6 @@
     <string name="no_description_available">No description available</string>
     <string name="steps">%1$d steps</string>
     <string name="untitled_flow">Untitled Flow</string>
-    <string name="in_progress_text">In Progress</string>
     <string name="completed">Completed</string>
     <string name="available_flows">Available Flows</string>
     <string name="training_platform">Training Platform</string>
@@ -26,4 +25,5 @@
     <string name="start_next_flow">Start Next Flow</string>
     <string name="go_to_home">Go To Home</string>
     <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">Congratulations! You have successfully completed this training. You can revisit this training anytime from the flow list.</string>
+    <string name="pending">Pending</string>
 </resources>
