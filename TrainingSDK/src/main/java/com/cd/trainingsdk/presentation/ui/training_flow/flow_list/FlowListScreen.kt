@@ -419,7 +419,7 @@ private fun StatusCard(flows: List<FlowListResponseContent>) {
                 it.userProgress?.isStarted == true &&
                         it.userProgress.isCompleted != true
             }
-            StatusCardItem(stringResource(R.string.in_progress_text), inProgressCount)
+            StatusCardItem(stringResource(R.string.pending), inProgressCount)
         }
     }
 }
@@ -477,15 +477,9 @@ private fun FlowItem(
                     .size(40.dp)
                     .background(
                         color = when {
-                            flow.userProgress?.isCompleted == true -> MaterialTheme.colorScheme.primary.copy(
-                                alpha = 0.1f
-                            )
-
-                            flow.userProgress?.isStarted == true -> MaterialTheme.colorScheme.secondary.copy(
-                                alpha = 0.1f
-                            )
-
-                            else -> MaterialTheme.colorScheme.surfaceVariant
+                            flow.userProgress?.isCompleted == true -> Color(0xff40AB2C).copy(alpha = 0.1f)
+                            flow.userProgress?.isStarted == true -> Color(0xffFFA726).copy(alpha = 0.1f)
+                            else -> Color(0xff9E9E9E).copy(alpha = 0.1f)
                         },
                         shape = CircleShape
                     ),
@@ -495,21 +489,17 @@ private fun FlowItem(
                     painter = painterResource(
                         when {
                             flow.userProgress?.isCompleted == true -> R.drawable.complete_circle
-                            flow.userProgress?.isStarted == true -> R.drawable.outline_incomplete_circle_24
-                            else -> R.drawable.incomplete_circle_yellow
+                            flow.userProgress?.isStarted == true -> R.drawable.incomplete_circle
+                            else -> R.drawable.not_started_circle
                         }
                     ),
                     contentDescription = when {
                         flow.userProgress?.isCompleted == true -> stringResource(R.string.completed)
-                        flow.userProgress?.isStarted == true -> stringResource(R.string.in_progress_text)
+                        flow.userProgress?.isStarted == true -> stringResource(R.string.pending)
                         else -> stringResource(R.string.not_started)
                     },
                     modifier = Modifier.size(24.dp),
-                    tint = when {
-                        flow.userProgress?.isCompleted == true -> MaterialTheme.colorScheme.primary
-                        flow.userProgress?.isStarted == true -> MaterialTheme.colorScheme.secondary
-                        else -> MaterialTheme.colorScheme.onSurfaceVariant
-                    }
+                    tint = Color.Unspecified
                 )
             }
 
