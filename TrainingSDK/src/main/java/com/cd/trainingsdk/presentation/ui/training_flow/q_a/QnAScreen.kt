@@ -1,19 +1,23 @@
 package com.cd.trainingsdk.presentation.ui.training_flow.q_a
 
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,11 +38,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cd.trainingsdk.R
 import com.cd.trainingsdk.domain.contents.OptionsContent
 import com.cd.trainingsdk.domain.contents.QnaResponseContent
-import com.cd.trainingsdk.domain.contents.QuestionResponseContent
 import com.cd.trainingsdk.presentation.ui.beans.ButtonHandlerBean
 import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog
 import com.cd.trainingsdk.presentation.ui.common.LoadingSection
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight12
+import com.cd.trainingsdk.presentation.ui.common.SpacerHeight16
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
@@ -52,33 +56,8 @@ internal fun QnAScreen(viewModel: TrainingFlowViewModel) {
                 .padding(it)
                 .padding(16.dp)
         ) {
-            val qna = mutableListOf<QnaResponseContent>()
-            qna.add(
-                QnaResponseContent(
-                    QuestionResponseContent("1", "What is your name?"),
-                    mutableListOf(
-                        OptionsContent("1", "Arpit Katiyar"),
-                        OptionsContent("2", "Lakshay Mudgal"),
-                        OptionsContent("3", "Hello Bro"),
-                        OptionsContent("4", "I dont know")
-                    ),
-                    false
-                )
-            )
-            qna.add(
-                QnaResponseContent(
-                    QuestionResponseContent("2", "What is your age?"),
-                    mutableListOf(
-                        OptionsContent("1", "24"),
-                        OptionsContent("2", "25"),
-                        OptionsContent("3", "26"),
-                        OptionsContent("4", "27")
-                    ),
-                    false
-                )
-            )
-            QnASection(qna, viewModel)
-//            HandleQuestionAndAnswerStateFlow(viewModel)
+            HandleQuestionAndAnswerStateFlow(viewModel)
+            HandleQuestionAndAnswerCompleteStateFlow(viewModel)
         }
     }
     LaunchedEffect(Unit) {
@@ -89,12 +68,12 @@ internal fun QnAScreen(viewModel: TrainingFlowViewModel) {
 @Composable
 private fun HandleQuestionAndAnswerStateFlow(viewModel: TrainingFlowViewModel) {
 
-    val flowDetailsStateFlow = viewModel.qnaStateFlow.collectAsStateWithLifecycle()
+    val qnaStateFlow = viewModel.qnaStateFlow.collectAsStateWithLifecycle()
 
     var isResponseHandled by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    when (val response = flowDetailsStateFlow.value) {
+    when (val response = qnaStateFlow.value) {
         is DataUiResponseStatus.Loading -> {
             isResponseHandled = false
             LoadingSection()
@@ -126,11 +105,55 @@ private fun HandleQuestionAndAnswerStateFlow(viewModel: TrainingFlowViewModel) {
 }
 
 @Composable
+private fun HandleQuestionAndAnswerCompleteStateFlow(viewModel: TrainingFlowViewModel) {
+
+    val qnaCompleteStateFlow = viewModel.qnaCompleteStateFlow.collectAsStateWithLifecycle()
+
+    var isResponseHandled by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    when (val response = qnaCompleteStateFlow.value) {
+        is DataUiResponseStatus.Loading -> {
+            isResponseHandled = false
+            LoadingSection()
+        }
+
+        is DataUiResponseStatus.Success -> {
+            if (!isResponseHandled) {
+                isResponseHandled = true
+            }
+        }
+
+        is DataUiResponseStatus.Failure -> {
+            if (!isResponseHandled) {
+                ErrorAlertDialog(
+                    errorMessage = context.getErrorMessage(
+                        response.errorMessage,
+                        response.errorCode
+                    ),
+                    negativeButton = ButtonHandlerBean(
+                        buttonText = stringResource(R.string.ok),
+                        onButtonClicked = {
+                            isResponseHandled = true
+                        }
+                    )
+                )
+            }
+        }
+
+        else -> {}
+    }
+}
+
+@Composable
 private fun QnASection(data: List<QnaResponseContent>, viewModel: TrainingFlowViewModel) {
     val selectedQuestion = data.getOrNull(viewModel.selectedQuestionIndex) ?: return
     val selectedOptions = remember {
         mutableStateListOf<OptionsContent>()
+    }.also {
+        it.addAll(selectedQuestion.selectedAnswers)
     }
+    val context = LocalContext.current
     ProgressBarSections(viewModel.selectedQuestionIndex + 1, data.size)
     SpacerHeight12()
     Text(
@@ -138,13 +161,57 @@ private fun QnASection(data: List<QnaResponseContent>, viewModel: TrainingFlowVi
         color = Color.Black,
         fontWeight = FontWeight.Medium
     )
-    SpacerHeight12()
+    SpacerHeight16()
     if (selectedQuestion.isMsq) {
-
+        MultipleSelectionOptions(selectedQuestion.options, selectedOptions) { option, isSelected ->
+            if (isSelected) {
+                selectedOptions.add(option)
+                selectedQuestion.selectedAnswers.add(option)
+            } else {
+                selectedOptions.remove(option)
+                selectedQuestion.selectedAnswers.remove(option)
+            }
+        }
     } else {
-        RadioButtonSingleSelection(selectedQuestion.options, selectedOptions) {
+        SingleSelectionOptions(selectedQuestion.options, selectedOptions) {
             selectedOptions.clear()
             selectedOptions.add(it)
+            selectedQuestion.selectedAnswers.clear()
+            selectedQuestion.selectedAnswers.add(it)
+        }
+    }
+
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(modifier = Modifier.weight(1f)) {
+            if (viewModel.selectedQuestionIndex > 0) {
+                TextButton(onClick = {
+                    if (viewModel.selectedQuestionIndex > 0) {
+                        viewModel.selectedQuestionIndex--
+                    }
+                }) {
+                    Text("Previous")
+                }
+            }
+        }
+
+        Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.End) {
+            TextButton(onClick = {
+                if (selectedOptions.isEmpty()) {
+                    Toast.makeText(
+                        context,
+                        "Please select answer for this question",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (viewModel.selectedQuestionIndex < data.size - 1) {
+                        viewModel.selectedQuestionIndex++
+                    } else {
+                        viewModel.completeQnA(viewModel.selectedFlow?.id ?: 0, data)
+                    }
+                }
+            }) {
+                Text("Next")
+            }
         }
     }
 }
@@ -171,14 +238,14 @@ fun ProgressBarSections(currentQuestion: Int, questionCount: Int) {
 }
 
 @Composable
-fun RadioButtonSingleSelection(
+fun SingleSelectionOptions(
     options: List<OptionsContent>,
     selectedOptionsList: List<OptionsContent>,
     onOptionSelected: (OptionsContent) -> Unit
 ) {
     Column(Modifier.selectableGroup()) {
         options.forEach { option ->
-            OptionItem(selectedOptionsList.contains(option), option.option) {
+            OptionItem(false, selectedOptionsList.contains(option), option.option) {
                 onOptionSelected(option)
             }
         }
@@ -186,10 +253,26 @@ fun RadioButtonSingleSelection(
 }
 
 @Composable
+fun MultipleSelectionOptions(
+    options: List<OptionsContent>,
+    selectedOptionsList: List<OptionsContent>,
+    onOptionSelectionChanged: (OptionsContent, Boolean) -> Unit
+) {
+    Column(Modifier.selectableGroup()) {
+        options.forEach { option ->
+            OptionItem(true, selectedOptionsList.contains(option), option.option) {
+                onOptionSelectionChanged(option, it)
+            }
+        }
+    }
+}
+
+@Composable
 fun OptionItem(
+    isMsq: Boolean,
     isSelected: Boolean,
     optionText: String,
-    onOptionSelectionChanged: () -> Unit
+    onOptionSelectionChanged: (Boolean) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -202,12 +285,19 @@ fun OptionItem(
             )
             .padding(2.dp)
             .clickable {
-                onOptionSelectionChanged()
+                onOptionSelectionChanged(!isSelected)
             }, verticalAlignment = Alignment.CenterVertically
     ) {
-        RadioButton(isSelected, onClick = {
-            onOptionSelectionChanged()
-        })
+        if (isMsq) {
+            Checkbox(isSelected, onCheckedChange = {
+                onOptionSelectionChanged(it)
+            })
+        } else {
+            RadioButton(isSelected, onClick = {
+                onOptionSelectionChanged(true)
+            })
+        }
+
         Text(optionText, fontSize = 14.sp)
     }
 }

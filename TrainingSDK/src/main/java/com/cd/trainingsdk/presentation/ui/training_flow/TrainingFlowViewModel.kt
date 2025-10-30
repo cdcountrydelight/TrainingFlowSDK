@@ -24,6 +24,7 @@ import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.clearAll
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.mapToDataUiResponseStatus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
@@ -60,6 +61,11 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         MutableStateFlow(DataUiResponseStatus.Companion.none())
 
     internal val qnaStateFlow = _qnaStateFlow.asStateFlow()
+
+    private val _qnaCompleteStateFlow: MutableStateFlow<DataUiResponseStatus<Unit>> =
+        MutableStateFlow(DataUiResponseStatus.Companion.none())
+
+    internal val qnaCompleteStateFlow = _qnaCompleteStateFlow.asStateFlow()
 
 
     var selectedQuestionIndex by mutableIntStateOf(0)
@@ -134,9 +140,17 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         _qnaStateFlow.value = DataUiResponseStatus.loading()
         selectedQuestionIndex = 0
         backgroundCall {
+            delay(1000)
             _qnaStateFlow.value =
                 GetQnAUseCase().invoke(context, authenticationToken, flowId)
                     .mapToDataUiResponseStatus()
+        }
+    }
+
+    fun completeQnA(flowId: Int, questionsDetails: List<QnaResponseContent>) {
+        _qnaCompleteStateFlow.value = DataUiResponseStatus.loading()
+        backgroundCall {
+
         }
     }
 

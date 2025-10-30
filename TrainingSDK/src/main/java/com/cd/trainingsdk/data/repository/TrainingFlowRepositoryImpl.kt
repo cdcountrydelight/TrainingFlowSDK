@@ -11,7 +11,9 @@ import com.cd.trainingsdk.data.network.NetworkCallHelper.networkCall
 import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.OptionsContent
 import com.cd.trainingsdk.domain.contents.QnaResponseContent
+import com.cd.trainingsdk.domain.contents.QuestionResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 import com.cd.trainingsdk.domain.repository.ITrainingFlowRepository
@@ -67,6 +69,32 @@ internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
     }
 
     override suspend fun getQnADetails(flowId: Int): DataResponseStatus<List<QnaResponseContent>> {
+        val qna = mutableListOf<QnaResponseContent>()
+        qna.add(
+            QnaResponseContent(
+                QuestionResponseContent("1", "What is your name?"),
+                mutableListOf(
+                    OptionsContent("1", "Arpit Katiyar"),
+                    OptionsContent("2", "Lakshay Mudgal"),
+                    OptionsContent("3", "Hello Bro"),
+                    OptionsContent("4", "I dont know")
+                ),
+                true
+            )
+        )
+        qna.add(
+            QnaResponseContent(
+                QuestionResponseContent("2", "What is your age?"),
+                mutableListOf(
+                    OptionsContent("1", "24"),
+                    OptionsContent("2", "25"),
+                    OptionsContent("3", "26"),
+                    OptionsContent("4", "27")
+                ),
+                false
+            )
+        )
+        return DataResponseStatus.success(qna)
         val mapper = QnAResponseEntityToContentMapper()
         val response = networkCall<List<QnaResponseEntity>> {
             httpClient.get("")
