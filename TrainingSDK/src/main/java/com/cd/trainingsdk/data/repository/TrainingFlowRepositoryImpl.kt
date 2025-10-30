@@ -6,9 +6,12 @@ import com.cd.trainingsdk.data.entity.QnaResponseEntity
 import com.cd.trainingsdk.data.mappers.complete_training_flow.CompleteFlowResponseMapper
 import com.cd.trainingsdk.data.mappers.flow_details_mappers.FlowDetailsMapper
 import com.cd.trainingsdk.data.mappers.flow_list_mappers.FlowListMapper
+import com.cd.trainingsdk.data.mappers.qna.CompleteQnAResponseEntityToContentMapper
 import com.cd.trainingsdk.data.mappers.qna.QnAResponseEntityToContentMapper
 import com.cd.trainingsdk.data.network.NetworkCallHelper.networkCall
 import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
+import com.cd.trainingsdk.domain.contents.CompleteQnAContent
+import com.cd.trainingsdk.domain.contents.CompleteQnaResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
 import com.cd.trainingsdk.domain.contents.OptionsContent
@@ -110,6 +113,16 @@ internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
                 val qna = response.data.mapNotNull { mapper.mapData(it) }
                 DataResponseStatus.success(qna)
             }
+        }
+    }
+
+    override suspend fun completeQnA(
+        flowId: Int,
+        completeQnAList: List<CompleteQnAContent>
+    ): DataResponseStatus<CompleteQnaResponseContent> {
+        return DataResponseStatus.success(CompleteQnaResponseContent(1.1))
+        return networkCall(CompleteQnAResponseEntityToContentMapper()) {
+            httpClient.get("")
         }
     }
 

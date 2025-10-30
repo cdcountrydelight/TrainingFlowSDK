@@ -48,7 +48,10 @@ import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
 
 @Composable
-internal fun QnAScreen(viewModel: TrainingFlowViewModel) {
+internal fun QnAScreen(
+    viewModel: TrainingFlowViewModel,
+    onNavigateToCompleteTraining: (calculatedScore: Double?) -> Unit
+) {
     val context = LocalContext.current
     Scaffold {
         Column(
@@ -57,7 +60,7 @@ internal fun QnAScreen(viewModel: TrainingFlowViewModel) {
                 .padding(16.dp)
         ) {
             HandleQuestionAndAnswerStateFlow(viewModel)
-            HandleQuestionAndAnswerCompleteStateFlow(viewModel)
+            HandleQuestionAndAnswerCompleteStateFlow(viewModel, onNavigateToCompleteTraining)
         }
     }
     LaunchedEffect(Unit) {
@@ -105,7 +108,10 @@ private fun HandleQuestionAndAnswerStateFlow(viewModel: TrainingFlowViewModel) {
 }
 
 @Composable
-private fun HandleQuestionAndAnswerCompleteStateFlow(viewModel: TrainingFlowViewModel) {
+private fun HandleQuestionAndAnswerCompleteStateFlow(
+    viewModel: TrainingFlowViewModel,
+    onNavigateToCompleteTraining: (calculatedScore: Double?) -> Unit
+) {
 
     val qnaCompleteStateFlow = viewModel.qnaCompleteStateFlow.collectAsStateWithLifecycle()
 
@@ -120,6 +126,7 @@ private fun HandleQuestionAndAnswerCompleteStateFlow(viewModel: TrainingFlowView
 
         is DataUiResponseStatus.Success -> {
             if (!isResponseHandled) {
+                onNavigateToCompleteTraining(response.data.calculatedScore)
                 isResponseHandled = true
             }
         }
@@ -206,7 +213,7 @@ private fun QnASection(data: List<QnaResponseContent>, viewModel: TrainingFlowVi
                     if (viewModel.selectedQuestionIndex < data.size - 1) {
                         viewModel.selectedQuestionIndex++
                     } else {
-                        viewModel.completeQnA(viewModel.selectedFlow?.id ?: 0, data)
+                        viewModel.completeQnA(viewModel.selectedFlow?.id ?: 0, context, data)
                     }
                 }
             }) {

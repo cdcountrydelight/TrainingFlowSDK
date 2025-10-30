@@ -12,4 +12,4 @@ internal object FlowDetailsScreenDestination
 internal object QnAScreenDestination
 
 @Serializable
-internal object CompletedTrainingScreenDestination
+internal class CompletedTrainingScreenDestination(val calculatedScore: Double?)

@@ -8,12 +8,15 @@ import androidx.compose.runtime.setValue
 import com.cd.trainingsdk.R
 import com.cd.trainingsdk.data.network.ConstantHelper.unAuthorizedExceptionCodes
 import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
+import com.cd.trainingsdk.domain.contents.CompleteQnAContent
+import com.cd.trainingsdk.domain.contents.CompleteQnaResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
 import com.cd.trainingsdk.domain.contents.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 import com.cd.trainingsdk.domain.use_cases.CompleteFlowUseCase
+import com.cd.trainingsdk.domain.use_cases.CompleteQnAUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowDetailsUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowsListUseCase
 import com.cd.trainingsdk.domain.use_cases.GetQnAUseCase
@@ -62,7 +65,7 @@ internal class TrainingFlowViewModel : BaseViewModel() {
 
     internal val qnaStateFlow = _qnaStateFlow.asStateFlow()
 
-    private val _qnaCompleteStateFlow: MutableStateFlow<DataUiResponseStatus<Unit>> =
+    private val _qnaCompleteStateFlow: MutableStateFlow<DataUiResponseStatus<CompleteQnaResponseContent>> =
         MutableStateFlow(DataUiResponseStatus.Companion.none())
 
     internal val qnaCompleteStateFlow = _qnaCompleteStateFlow.asStateFlow()
@@ -147,10 +150,18 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         }
     }
 
-    fun completeQnA(flowId: Int, questionsDetails: List<QnaResponseContent>) {
+    fun completeQnA(flowId: Int, context: Context, questionsDetails: List<QnaResponseContent>) {
         _qnaCompleteStateFlow.value = DataUiResponseStatus.loading()
         backgroundCall {
-
+            _qnaCompleteStateFlow.value = CompleteQnAUseCase().invoke(
+                context,
+                authenticationToken,
+                flowId,
+                questionsDetails.map {
+                    CompleteQnAContent(
+                        it.question.question,
+                        it.selectedAnswers.map { it.optionId })
+                }).mapToDataUiResponseStatus()
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.training_flow.flow_details.FlowDetailScreen
 import com.cd.trainingsdk.presentation.ui.training_flow.flow_list.FlowListScreen
@@ -67,23 +68,23 @@ fun TrainingFlowNavGraph(
         composable<QnAScreenDestination> {
             QnAScreen(
                 viewModel = viewModel,
-//                onBackClicked = {
-//                    navController.popBackStack()
-//                },
-//                onNavigateToTrainingCompleted = {
-//                    navController.navigate(CompletedTrainingScreenDestination) {
-//                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
-//                            inclusive = true
-//                        }
-//                    }
-//                }
+                onNavigateToCompleteTraining = {
+                    navController.navigate(CompletedTrainingScreenDestination(it)) {
+                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
 
-        composable<CompletedTrainingScreenDestination> {
+        composable<CompletedTrainingScreenDestination> { backStack ->
+            val calculatedScore =
+                backStack.toRoute<CompletedTrainingScreenDestination>().calculatedScore
             CompletedTrainingScreen(
                 viewModel = viewModel,
                 appName = appName,
+                calculatedScore = calculatedScore,
                 onGoToHome = onBackPressed,
                 onStartNextFlow = {
                     navController.popBackStack(FlowListScreenDestination, false)

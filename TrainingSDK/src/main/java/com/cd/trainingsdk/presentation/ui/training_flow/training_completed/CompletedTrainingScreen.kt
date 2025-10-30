@@ -54,6 +54,7 @@ import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
 internal fun CompletedTrainingScreen(
     viewModel: TrainingFlowViewModel,
     appName: String,
+    calculatedScore: Double?,
     onGoToHome: () -> Unit,
     onStartNextFlow: () -> Unit
 ) {

@@ -1,6 +1,8 @@
 package com.cd.trainingsdk.domain.repository
 
 import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
+import com.cd.trainingsdk.domain.contents.CompleteQnAContent
+import com.cd.trainingsdk.domain.contents.CompleteQnaResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
 import com.cd.trainingsdk.domain.contents.QnaResponseContent
@@ -13,6 +15,11 @@ internal interface ITrainingFlowRepository {
     suspend fun getFlowDetails(flowId: Int): DataResponseStatus<FlowDetailsResponseContent>
 
     suspend fun getQnADetails(flowId: Int): DataResponseStatus<List<QnaResponseContent>>
+
+    suspend fun completeQnA(
+        flowId: Int,
+        completeQnAList: List<CompleteQnAContent>
+    ): DataResponseStatus<CompleteQnaResponseContent>
 
     suspend fun completeTraining(flowId: Int): DataResponseStatus<CompleteFlowResponseContent>
 
