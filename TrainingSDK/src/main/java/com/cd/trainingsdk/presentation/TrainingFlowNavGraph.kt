@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.training_flow.flow_details.FlowDetailScreen
 import com.cd.trainingsdk.presentation.ui.training_flow.flow_list.FlowListScreen
+import com.cd.trainingsdk.presentation.ui.training_flow.q_a.QnAScreen
 import com.cd.trainingsdk.presentation.ui.training_flow.training_completed.CompletedTrainingScreen
 
 @Composable
@@ -53,13 +54,29 @@ fun TrainingFlowNavGraph(
                 onBackClicked = {
                     navController.popBackStack()
                 },
-                onNavigateToTrainingCompleted = {
-                    navController.navigate(CompletedTrainingScreenDestination) {
+                onNavigateToQnASection = {
+                    navController.navigate(QnAScreenDestination) {
                         popUpTo(navController.currentDestination?.id ?: return@navigate) {
                             inclusive = true
                         }
                     }
                 }
+            )
+        }
+
+        composable<QnAScreenDestination> {
+            QnAScreen(
+                viewModel = viewModel,
+//                onBackClicked = {
+//                    navController.popBackStack()
+//                },
+//                onNavigateToTrainingCompleted = {
+//                    navController.navigate(CompletedTrainingScreenDestination) {
+//                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
+//                            inclusive = true
+//                        }
+//                    }
+//                }
             )
         }
 

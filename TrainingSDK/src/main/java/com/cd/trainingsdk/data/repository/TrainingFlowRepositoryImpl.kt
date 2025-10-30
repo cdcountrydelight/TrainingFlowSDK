@@ -2,16 +2,19 @@ package com.cd.trainingsdk.data.repository
 
 import com.cd.trainingsdk.data.entity.FlowDetailsResponseEntity
 import com.cd.trainingsdk.data.entity.FlowListResponseEntity
+import com.cd.trainingsdk.data.entity.QnaResponseEntity
 import com.cd.trainingsdk.data.mappers.complete_training_flow.CompleteFlowResponseMapper
 import com.cd.trainingsdk.data.mappers.flow_details_mappers.FlowDetailsMapper
 import com.cd.trainingsdk.data.mappers.flow_list_mappers.FlowListMapper
+import com.cd.trainingsdk.data.mappers.qna.QnAResponseEntityToContentMapper
 import com.cd.trainingsdk.data.network.NetworkCallHelper.networkCall
 import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
-import com.cd.trainingsdk.domain.repository.ITrainingFlowRepository
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
+import com.cd.trainingsdk.domain.repository.ITrainingFlowRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -59,6 +62,25 @@ internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
                 } else {
                     DataResponseStatus.success(flowDetails)
                 }
+            }
+        }
+    }
+
+    override suspend fun getQnADetails(flowId: Int): DataResponseStatus<List<QnaResponseContent>> {
+        val mapper = QnAResponseEntityToContentMapper()
+        val response = networkCall<List<QnaResponseEntity>> {
+            httpClient.get("")
+        }
+
+        return when (response) {
+            is DataResponseStatus.Failure -> {
+                DataResponseStatus.failure(response.errorMessage, response.errorCode)
+
+            }
+
+            is DataResponseStatus.Success -> {
+                val qna = response.data.mapNotNull { mapper.mapData(it) }
+                DataResponseStatus.success(qna)
             }
         }
     }

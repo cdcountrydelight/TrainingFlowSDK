@@ -9,4 +9,7 @@ internal object FlowListScreenDestination
 internal object FlowDetailsScreenDestination
 
 @Serializable
+internal object QnAScreenDestination
+
+@Serializable
 internal object CompletedTrainingScreenDestination

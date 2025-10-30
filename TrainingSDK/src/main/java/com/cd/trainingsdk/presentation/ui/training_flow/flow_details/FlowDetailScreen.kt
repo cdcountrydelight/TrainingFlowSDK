@@ -82,7 +82,7 @@ import kotlin.math.min
 internal fun FlowDetailScreen(
     viewModel: TrainingFlowViewModel,
     onBackClicked: () -> Unit,
-    onNavigateToTrainingCompleted: () -> Unit
+    onNavigateToQnASection: () -> Unit
 ) {
 
     val steps = remember {
@@ -117,7 +117,7 @@ internal fun FlowDetailScreen(
                     } else {
                         viewModel.showToolTip = false
                         viewModel.completeTraining(viewModel.selectedFlow?.id ?: 0, context)
-                        onNavigateToTrainingCompleted()
+                        onNavigateToQnASection()
                     }
                 },
             )

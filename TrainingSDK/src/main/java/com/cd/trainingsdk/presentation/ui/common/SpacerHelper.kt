@@ -36,6 +36,11 @@ internal fun SpacerHeight12() {
 }
 
 @Composable
+internal fun SpacerHeight16() {
+    GenericSpacer(height = 16.dp)
+}
+
+@Composable
 internal fun SpacerHeight24() {
     GenericSpacer(height = 24.dp)
 }

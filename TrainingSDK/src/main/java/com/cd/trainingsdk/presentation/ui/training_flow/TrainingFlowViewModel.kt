@@ -2,6 +2,7 @@ package com.cd.trainingsdk.presentation.ui.training_flow
 
 import android.content.Context
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.cd.trainingsdk.R
@@ -9,11 +10,13 @@ import com.cd.trainingsdk.data.network.ConstantHelper.unAuthorizedExceptionCodes
 import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 import com.cd.trainingsdk.domain.use_cases.CompleteFlowUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowDetailsUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowsListUseCase
+import com.cd.trainingsdk.domain.use_cases.GetQnAUseCase
 import com.cd.trainingsdk.presentation.ImageLoader
 import com.cd.trainingsdk.presentation.base.BaseViewModel
 import com.cd.trainingsdk.presentation.ui.beans.ImageLoadRequest
@@ -52,6 +55,14 @@ internal class TrainingFlowViewModel : BaseViewModel() {
     internal var currentStepIndex: Int? by mutableStateOf(null)
 
     internal var showToolTip: Boolean by mutableStateOf(true)
+
+    private val _qnaStateFlow: MutableStateFlow<DataUiResponseStatus<List<QnaResponseContent>>> =
+        MutableStateFlow(DataUiResponseStatus.Companion.none())
+
+    internal val qnaStateFlow = _qnaStateFlow.asStateFlow()
+
+
+    var selectedQuestionIndex by mutableIntStateOf(0)
 
 
     fun getFlowsList(context: Context, authToken: String, packageName: String) {
@@ -116,6 +127,16 @@ internal class TrainingFlowViewModel : BaseViewModel() {
                         )
                     }
                 }
+        }
+    }
+
+    fun getQuestionsList(flowId: Int, context: Context) {
+        _qnaStateFlow.value = DataUiResponseStatus.loading()
+        selectedQuestionIndex = 0
+        backgroundCall {
+            _qnaStateFlow.value =
+                GetQnAUseCase().invoke(context, authenticationToken, flowId)
+                    .mapToDataUiResponseStatus()
         }
     }
 
