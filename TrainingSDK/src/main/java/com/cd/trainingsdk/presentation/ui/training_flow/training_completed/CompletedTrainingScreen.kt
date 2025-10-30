@@ -13,13 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -60,7 +57,13 @@ internal fun CompletedTrainingScreen(
 ) {
     Scaffold {
         Box(Modifier.padding(it)) {
-            HandleTrainingCompletedStateFlow(viewModel, appName, onGoToHome, onStartNextFlow)
+            HandleTrainingCompletedStateFlow(
+                viewModel,
+                appName,
+                onGoToHome,
+                calculatedScore,
+                onStartNextFlow
+            )
         }
     }
 }
@@ -71,7 +74,8 @@ private fun HandleTrainingCompletedStateFlow(
     viewModel: TrainingFlowViewModel,
     appName: String,
     onGoToHome: () -> Unit,
-    onStartNextFlow: () -> Unit
+    calculatedScore: Double?,
+    onStartNextFlow: () -> Unit,
 ) {
     val flowDetailsStateFlow = viewModel.completeTrainingStateFlow.collectAsStateWithLifecycle()
 
@@ -89,6 +93,7 @@ private fun HandleTrainingCompletedStateFlow(
                 viewModel,
                 appName,
                 response.data.flowName,
+                calculatedScore,
                 onGoToHome,
                 onStartNextFlow
             )
@@ -121,6 +126,7 @@ private fun TrainingCompletedSection(
     viewModel: TrainingFlowViewModel,
     appName: String,
     flowName: String?,
+    calculatedScore: Double?,
     onGoToHome: () -> Unit,
     onStartNextFlow: () -> Unit
 ) {
@@ -169,12 +175,7 @@ private fun TrainingCompletedSection(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Success",
-                        tint = Color.White,
-                        modifier = Modifier.size(60.dp)
-                    )
+                    Text("$calculatedScore", fontSize = 32.sp, color = Color.White)
                 }
             }
 
