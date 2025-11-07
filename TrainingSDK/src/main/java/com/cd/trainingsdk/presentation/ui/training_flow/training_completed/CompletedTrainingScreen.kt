@@ -2,6 +2,18 @@
 
 package com.cd.trainingsdk.presentation.ui.training_flow.training_completed
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,18 +35,30 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,15 +66,18 @@ import com.cd.trainingsdk.R
 import com.cd.trainingsdk.presentation.ui.beans.ButtonHandlerBean
 import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog
 import com.cd.trainingsdk.presentation.ui.common.LoadingSection
+import com.cd.trainingsdk.presentation.ui.common.SpacerHeight12
+import com.cd.trainingsdk.presentation.ui.common.SpacerHeight16
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
+import kotlinx.coroutines.delay
+import kotlin.math.sin
 
 
 @Composable
 internal fun CompletedTrainingScreen(
     viewModel: TrainingFlowViewModel,
-    appName: String,
     calculatedScore: Double?,
     onGoToHome: () -> Unit,
     onStartNextFlow: () -> Unit
@@ -61,7 +87,6 @@ internal fun CompletedTrainingScreen(
         Box(Modifier.padding(it)) {
             HandleTrainingCompletedStateFlow(
                 viewModel,
-                appName,
                 onGoToHome,
                 calculatedScore,
                 onStartNextFlow
@@ -78,7 +103,6 @@ internal fun CompletedTrainingScreen(
 @Composable
 private fun HandleTrainingCompletedStateFlow(
     viewModel: TrainingFlowViewModel,
-    appName: String,
     onGoToHome: () -> Unit,
     calculatedScore: Double?,
     onStartNextFlow: () -> Unit,
@@ -97,7 +121,6 @@ private fun HandleTrainingCompletedStateFlow(
         is DataUiResponseStatus.Success -> {
             TrainingCompletedSection(
                 viewModel,
-                appName,
                 response.data.flowName,
                 calculatedScore,
                 onGoToHome,
@@ -130,148 +153,423 @@ private fun HandleTrainingCompletedStateFlow(
 @Composable
 private fun TrainingCompletedSection(
     viewModel: TrainingFlowViewModel,
-    appName: String,
     flowName: String?,
     calculatedScore: Double?,
     onGoToHome: () -> Unit,
     onStartNextFlow: () -> Unit
 ) {
+    var showContent by remember { mutableStateOf(false) }
+    val infiniteTransition = rememberInfiniteTransition(label = "background")
+
+    val animatedRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(30000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "rotation"
+    )
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        showContent = true
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(32.dp),
-            modifier = Modifier.fillMaxWidth()
+        // Animated gradient background
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .rotate(animatedRotation)
+                .scale(1.5f)
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                            MaterialTheme.colorScheme.secondary.copy(alpha = 0.03f),
+                            Color.Transparent
+                        ),
+                        radius = 800f
+                    )
+                )
+        )
+
+        AnimatedVisibility(
+            visible = showContent,
+            enter = fadeIn(animationSpec = tween(600)) + scaleIn(
+                animationSpec = tween(600, easing = FastOutSlowInEasing)
+            )
         ) {
-            Box(
-                modifier = Modifier.size(140.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(140.dp)
-                        .background(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
-                                    Color.Transparent
-                                )
-                            ),
-                            shape = CircleShape
-                        )
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(110.dp)
-                        .shadow(
-                            elevation = 12.dp,
-                            shape = CircleShape,
-                            clip = false
-                        )
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("$calculatedScore", fontSize = 32.sp, color = Color.White)
-                }
-            }
-
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = appName,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = flowName ?: stringResource(R.string.untitled_flow),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                )
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                Text(
-                    text = stringResource(R.string.congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list),
-                    fontSize = 15.sp,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    lineHeight = 22.sp,
-                    modifier = Modifier.padding(20.dp)
+                SpacerHeight12()
+                HeaderSection(calculatedScore)
+                GlassmorphismCard(flowName)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Primary button with gradient
+                    Button(
+                        onClick = {
+                            viewModel.resetCompleteTraining()
+                            onGoToHome()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp),
+                        shape = RoundedCornerShape(30.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 8.dp,
+                            pressedElevation = 12.dp
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(R.string.go_to_home),
+                            color = Color.White,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+
+                    // Secondary button with outline
+                    TextButton(
+                        onClick = {
+                            viewModel.resetCompleteTraining()
+                            onStartNextFlow()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp),
+                        shape = RoundedCornerShape(30.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.start_next_flow),
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+        }
+
+        // Confetti animation
+        if (showContent && calculatedScore != null && calculatedScore >= 70) {
+            ConfettiAnimation()
+        }
+    }
+}
+
+
+@Composable
+private fun HeaderSection(calculatedScore: Double?) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        AnimatedScoreDisplay(calculatedScore)
+        SpacerHeight16()
+        calculatedScore?.let {
+            GradeIndicator(it)
+        }
+    }
+}
+
+@Composable
+private fun AnimatedScoreDisplay(calculatedScore: Double?) {
+    var animatedScore by remember { mutableFloatStateOf(0f) }
+    val targetScore = calculatedScore?.toFloat() ?: 0f
+    val animatedProgress by animateFloatAsState(
+        targetValue = if (animatedScore > 0) targetScore / 100f else 0f,
+        animationSpec = tween(1500, easing = FastOutSlowInEasing),
+        label = "progress"
+    )
+
+    val size = 100.dp
+    val strokeWidth = 8.dp
+    val fontSize = 34.sp
+
+    LaunchedEffect(calculatedScore) {
+        if (calculatedScore != null) {
+            val animationDuration = 1500L
+            val steps = 30
+            val stepDuration = animationDuration / steps
+
+            for (i in 1..steps) {
+                delay(stepDuration)
+                animatedScore = (targetScore * i) / steps
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .size(size),
+        contentAlignment = Alignment.Center,
+    ) {
+        // Background circle with gradient
+        Canvas(
+            modifier = Modifier.size(size)
+        ) {
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.1f),
+                        Color.Transparent
+                    )
+                ),
+                radius = this.size.minDimension / 2
+            )
+        }
+
+        // Progress ring
+        Canvas(
+            modifier = Modifier.size(size * 0.9f)
+        ) {
+            val strokeWidthPx = strokeWidth.toPx()
+            val radius = (this.size.minDimension - strokeWidthPx) / 2
+            val startAngle = -90f
+
+            // Background ring
+            drawCircle(
+                color = Color.Gray.copy(alpha = 0.1f),
+                radius = radius,
+                style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
+            )
+
+            // Progress ring
+            drawArc(
+                brush = Brush.sweepGradient(
+                    colors = listOf(
+                        Color(0xFF4CAF50),
+                        Color(0xFF8BC34A),
+                        Color(0xFF4CAF50)
+                    )
+                ),
+                startAngle = startAngle,
+                sweepAngle = 360f * animatedProgress,
+                useCenter = false,
+                style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
+            )
+        }
+
+        // Score text
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "${animatedScore.toInt()}",
+                fontSize = fontSize,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+private fun GradeIndicator(score: Double) {
+    val (gradeText, gradeColor) = when {
+        score >= 90 -> Pair(
+            "Excellent!",
+            Color(0xFF4CAF50)
+        )
+
+        score >= 80 -> Pair(
+            "Great Job!",
+            Color(0xFF8BC34A)
+        )
+
+        score >= 70 -> Pair(
+            "Good Work!",
+            Color(0xFFFFC107)
+        )
+
+        else -> Pair(
+            "Completed!",
+            MaterialTheme.colorScheme.primary
+        )
+    }
+
+
+    Box(
+        modifier = Modifier
+            .background(
+                color = gradeColor.copy(alpha = 0.1f),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = gradeText,
+            color = gradeColor,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
+private fun GlassmorphismCard(flowName: String?) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 16.dp,
+                shape = RoundedCornerShape(24.dp),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+            ),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
+                            Color.Transparent
+                        )
+                    )
+                )
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Congratulations! 🎉",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = buildAnnotatedString {
+                    append("You have successfully completed training for ")
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                        append(flowName ?: stringResource(R.string.untitled_flow))
+                    }
+                    append(". You can revisit this training anytime from the flow list")
+                },
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ConfettiAnimation() {
+    // Create 4 waves of particles
+    val particleWaves = remember {
+        List(4) { waveIndex ->
+            List(40) {
+                ConfettiParticle(
+                    x = kotlin.random.Random.nextFloat(),
+                    y = -0.1f - (waveIndex * 0.4f), // Stagger the 4 waves
+                    color = listOf(
+                        Color(0xFFE91E63),
+                        Color(0xFF9C27B0),
+                        Color(0xFF2196F3),
+                        Color(0xFF4CAF50),
+                        Color(0xFFFFC107),
+                        Color(0xFFFF5722)
+                    ).random(),
+                    size = kotlin.random.Random.nextInt(8, 17).toFloat(),
+                    velocity = kotlin.random.Random.nextFloat() * 0.8f + 0.4f,
+                    angle = kotlin.random.Random.nextInt(-30, 31).toFloat(),
+                    cycleCount = 0 // Track how many times particle has fallen
                 )
             }
+        }.flatten()
+    }
 
-            // Action buttons
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Primary button - Go to Home
-                Button(
-                    onClick = {
-                        viewModel.resetCompleteTraining()
-                        onGoToHome()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .shadow(
-                            elevation = 8.dp,
-                            shape = RoundedCornerShape(16.dp),
-                            clip = false
-                        ),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text(
-                        text = stringResource(R.string.go_to_home),
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+    val animatedParticles = remember { mutableStateOf(particleWaves) }
+    var isAnimationActive by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        while (isAnimationActive) {
+            delay(16) // 60 FPS
+            animatedParticles.value = animatedParticles.value.map { particle ->
+                val newY = particle.y + particle.velocity * 0.018f
+                val newX = particle.x + sin(particle.angle * Math.PI / 180).toFloat() * 0.01f
+
+                // Check if particle has gone off screen
+                if (newY > 1.2f) {
+                    // Stop animation if particle has completed 1 cycle (4 waves = 1 full cycle)
+                    if (particle.cycleCount >= 0) {
+                        particle.copy(y = 2.0f) // Move off screen permanently
+                    } else {
+                        particle.copy(y = newY, x = newX)
+                    }
+                } else {
+                    particle.copy(y = newY, x = newX)
                 }
+            }
 
-                TextButton(
-                    onClick = {
-                        viewModel.resetCompleteTraining()
-                        onStartNextFlow()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.start_next_flow),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+            // Check if all particles are off screen
+            if (animatedParticles.value.all { it.y > 1.2f }) {
+                isAnimationActive = false
+            }
+        }
+    }
+
+    if (isAnimationActive) {
+        Canvas(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            animatedParticles.value.forEach { particle ->
+                if (particle.y >= -0.1f && particle.y < 1.2f) {
+                    drawConfetti(particle)
                 }
             }
         }
     }
 }
+
+private fun DrawScope.drawConfetti(particle: ConfettiParticle) {
+    val x = particle.x * size.width
+    val y = particle.y * size.height
+
+    rotate(particle.angle, pivot = Offset(x, y)) {
+        drawRect(
+            color = particle.color,
+            topLeft = Offset(x - particle.size / 2, y - particle.size / 2),
+            size = Size(particle.size, particle.size * 2),
+            alpha = (1f - particle.y).coerceIn(0f, 1f)
+        )
+    }
+}
+
+private data class ConfettiParticle(
+    val x: Float,
+    val y: Float,
+    val color: Color,
+    val size: Float,
+    val velocity: Float,
+    val angle: Float,
+    val cycleCount: Int = 0
+)

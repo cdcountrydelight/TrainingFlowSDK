@@ -57,11 +57,16 @@ fun TrainingFlowNavGraph(
                     navController.popBackStack()
                 },
                 onNavigateToQnASection = {
-                    navController.navigate(QnAScreenDestination) {
+                    navController.navigate(CompletedTrainingScreenDestination(100.0)) {
                         popUpTo(navController.currentDestination?.id ?: return@navigate) {
                             inclusive = true
                         }
                     }
+//                    navController.navigate(QnAScreenDestination) {
+//                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
+//                            inclusive = true
+//                        }
+//                    }
                 },
                 onNavigateToCompleteTrainingFlow = {
                     navController.navigate(CompletedTrainingScreenDestination(null)) {
@@ -91,7 +96,6 @@ fun TrainingFlowNavGraph(
                 backStack.toRoute<CompletedTrainingScreenDestination>().calculatedScore
             CompletedTrainingScreen(
                 viewModel = viewModel,
-                appName = appName,
                 calculatedScore = calculatedScore,
                 onGoToHome = onBackPressed,
                 onStartNextFlow = {
