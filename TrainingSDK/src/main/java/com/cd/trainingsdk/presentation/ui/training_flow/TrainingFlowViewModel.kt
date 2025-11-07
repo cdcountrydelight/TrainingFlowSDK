@@ -167,7 +167,7 @@ internal class TrainingFlowViewModel : BaseViewModel() {
                 flowId,
                 questionsDetails.question.map { question ->
                     CompleteQnAContent(
-                        question.question,
+                        question.questionId,
                         question.selectedOptions.map { it.optionId })
                 }).mapToDataUiResponseStatus()
         }

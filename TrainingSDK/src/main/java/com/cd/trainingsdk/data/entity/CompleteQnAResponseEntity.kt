@@ -1,3 +1,5 @@
 package com.cd.trainingsdk.data.entity
 
-data class CompleteQnAResponseEntity(val calculatedScore: Double? = null)
+import com.google.gson.annotations.SerializedName
+
+data class CompleteQnAResponseEntity(@SerializedName("score") val calculatedScore: Double? = null)

@@ -1,5 +1,7 @@
 package com.cd.trainingsdk.data.repository
 
+import com.cd.trainingsdk.data.entity.CompleteQnARequestEntity
+import com.cd.trainingsdk.data.entity.CompleteQuestionsRequestEntity
 import com.cd.trainingsdk.data.entity.FlowDetailsResponseEntity
 import com.cd.trainingsdk.data.entity.FlowListResponseEntity
 import com.cd.trainingsdk.data.entity.QnaResponseEntity
@@ -22,6 +24,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 
 internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
     ITrainingFlowRepository {
@@ -96,9 +99,15 @@ internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
         flowId: Int,
         completeQnAList: List<CompleteQnAContent>
     ): DataResponseStatus<CompleteQnaResponseContent> {
-        return DataResponseStatus.success(CompleteQnaResponseContent(1.1))
         return networkCall(CompleteQnAResponseEntityToContentMapper()) {
-            httpClient.get("")
+            httpClient.post("$flowId/quiz/submit/") {
+                setBody(CompleteQnARequestEntity(completeQnAList.map {
+                    CompleteQuestionsRequestEntity(
+                        it.question,
+                        it.options
+                    )
+                }))
+            }
         }
     }
 
