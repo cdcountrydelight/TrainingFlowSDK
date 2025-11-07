@@ -1,6 +1,6 @@
-package com.cd.trainingsdk.domain.contents
+package com.cd.trainingsdk.domain.contents.qna_list
 
-data class QuestionResponseContent(
+internal data class QuestionResponseContent(
     val questionId: String,
     val question: String,
     val options: List<OptionsContent>,

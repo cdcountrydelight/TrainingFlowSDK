@@ -1,11 +1,11 @@
 package com.cd.trainingsdk.domain.repository
 
-import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
-import com.cd.trainingsdk.domain.contents.CompleteQnAContent
-import com.cd.trainingsdk.domain.contents.CompleteQnaResponseContent
-import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
-import com.cd.trainingsdk.domain.contents.FlowListResponseContent
-import com.cd.trainingsdk.domain.contents.QnaResponseContent
+import com.cd.trainingsdk.domain.contents.complete_flow.CompleteFlowResponseContent
+import com.cd.trainingsdk.domain.contents.complete_qna.CompleteQnAContent
+import com.cd.trainingsdk.domain.contents.complete_qna.CompleteQnaResponseContent
+import com.cd.trainingsdk.domain.contents.flow_details.FlowDetailsResponseContent
+import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 
 internal interface ITrainingFlowRepository {

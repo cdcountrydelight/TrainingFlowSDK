@@ -68,8 +68,8 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.cd.trainingsdk.R
-import com.cd.trainingsdk.domain.contents.AnnotationItemResponseContent
-import com.cd.trainingsdk.domain.contents.StepsResponseContent
+import com.cd.trainingsdk.domain.contents.flow_details.AnnotationItemResponseContent
+import com.cd.trainingsdk.domain.contents.flow_details.StepsResponseContent
 import com.cd.trainingsdk.presentation.ImageLoader
 import com.cd.trainingsdk.presentation.ui.beans.ButtonHandlerBean
 import com.cd.trainingsdk.presentation.ui.beans.Tuple4

@@ -56,7 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cd.trainingsdk.R
-import com.cd.trainingsdk.domain.contents.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
 import com.cd.trainingsdk.presentation.ui.beans.ButtonHandlerBean
 import com.cd.trainingsdk.presentation.ui.common.EmptySection
 import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog

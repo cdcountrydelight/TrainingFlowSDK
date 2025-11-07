@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cd.trainingsdk.R
-import com.cd.trainingsdk.domain.contents.OptionsContent
-import com.cd.trainingsdk.domain.contents.QnaResponseContent
+import com.cd.trainingsdk.domain.contents.qna_list.OptionsContent
+import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.presentation.ui.beans.ButtonHandlerBean
 import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog
 import com.cd.trainingsdk.presentation.ui.common.LoadingSection
@@ -231,7 +231,7 @@ private fun QnASection(data: QnaResponseContent, viewModel: TrainingFlowViewMode
 }
 
 @Composable
-fun ProgressBarSections(currentQuestion: Int, questionCount: Int) {
+private fun ProgressBarSections(currentQuestion: Int, questionCount: Int) {
     val progress = currentQuestion.toFloat() / questionCount
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
         LinearProgressIndicator(
@@ -252,7 +252,7 @@ fun ProgressBarSections(currentQuestion: Int, questionCount: Int) {
 }
 
 @Composable
-fun SingleSelectionOptions(
+private fun SingleSelectionOptions(
     options: List<OptionsContent>,
     selectedOptionsList: List<OptionsContent>,
     onOptionSelected: (OptionsContent) -> Unit
@@ -267,7 +267,7 @@ fun SingleSelectionOptions(
 }
 
 @Composable
-fun MultipleSelectionOptions(
+private fun MultipleSelectionOptions(
     options: List<OptionsContent>,
     selectedOptionsList: List<OptionsContent>,
     onOptionSelectionChanged: (OptionsContent, Boolean) -> Unit
@@ -282,7 +282,7 @@ fun MultipleSelectionOptions(
 }
 
 @Composable
-fun OptionItem(
+private fun OptionItem(
     isMsq: Boolean,
     isSelected: Boolean,
     optionText: String,

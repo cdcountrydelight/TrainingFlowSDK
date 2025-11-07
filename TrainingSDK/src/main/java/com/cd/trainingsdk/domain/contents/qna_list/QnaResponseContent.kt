@@ -1,6 +1,6 @@
-package com.cd.trainingsdk.domain.contents
+package com.cd.trainingsdk.domain.contents.qna_list
 
-data class QnaResponseContent(
+internal data class QnaResponseContent(
     val id: String,
     val question: List<QuestionResponseContent> = listOf(),
     val flowId: String,

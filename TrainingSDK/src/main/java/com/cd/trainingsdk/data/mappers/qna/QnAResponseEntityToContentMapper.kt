@@ -1,10 +1,10 @@
 package com.cd.trainingsdk.data.mappers.qna
 
 import com.cd.trainingsdk.data.entity.QnaResponseEntity
-import com.cd.trainingsdk.domain.contents.QnaResponseContent
+import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 
-class QnAResponseEntityToContentMapper : IBaseMapper<QnaResponseEntity, QnaResponseContent?> {
+internal class QnAResponseEntityToContentMapper : IBaseMapper<QnaResponseEntity, QnaResponseContent?> {
     override fun mapData(data: QnaResponseEntity): QnaResponseContent? {
         val questionMapper = QuestionResponseEntityToContentMapper()
         val mappedQuestion = data.question?.mapNotNull { questionMapper.mapData(it) }

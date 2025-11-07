@@ -7,15 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.cd.trainingsdk.R
 import com.cd.trainingsdk.data.network.ConstantHelper.unAuthorizedExceptionCodes
-import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
-import com.cd.trainingsdk.domain.contents.CompleteQnAContent
-import com.cd.trainingsdk.domain.contents.CompleteQnaResponseContent
-import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
-import com.cd.trainingsdk.domain.contents.FlowListResponseContent
-import com.cd.trainingsdk.domain.contents.QnaResponseContent
+import com.cd.trainingsdk.domain.contents.complete_flow.CompleteFlowResponseContent
+import com.cd.trainingsdk.domain.contents.complete_qna.CompleteQnAContent
+import com.cd.trainingsdk.domain.contents.complete_qna.CompleteQnaResponseContent
+import com.cd.trainingsdk.domain.contents.flow_details.FlowDetailsResponseContent
+import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
-import com.cd.trainingsdk.domain.use_cases.CompleteFlowUseCase
+import com.cd.trainingsdk.domain.use_cases.TrainingCompletedUseCase
 import com.cd.trainingsdk.domain.use_cases.CompleteQnAUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowDetailsUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowsListUseCase
@@ -181,7 +181,7 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         _trainingCompletedStateFlow.value = DataUiResponseStatus.loading()
         backgroundCall {
             _trainingCompletedStateFlow.value =
-                CompleteFlowUseCase().invoke(context, flowId, authenticationToken)
+                TrainingCompletedUseCase().invoke(context, flowId, authenticationToken)
                     .mapToDataUiResponseStatus()
         }
     }
