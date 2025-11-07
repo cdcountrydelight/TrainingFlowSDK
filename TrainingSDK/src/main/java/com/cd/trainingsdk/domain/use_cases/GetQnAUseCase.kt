@@ -11,7 +11,7 @@ internal class GetQnAUseCase {
         context: Context,
         authToken: String,
         flowId: Int
-    ): DataResponseStatus<List<QnaResponseContent>> {
+    ): DataResponseStatus<QnaResponseContent> {
         return getTrainingFlowRepository(context, authToken).getQnADetails(flowId)
     }
 }

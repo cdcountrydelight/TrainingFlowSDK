@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -18,6 +19,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,13 +49,18 @@ import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun QnAScreen(
     viewModel: TrainingFlowViewModel,
     onNavigateToCompleteTraining: (calculatedScore: Double?) -> Unit
 ) {
     val context = LocalContext.current
-    Scaffold {
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Text("Quick Check")
+        })
+    }) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -153,18 +160,18 @@ private fun HandleQuestionAndAnswerCompleteStateFlow(
 }
 
 @Composable
-private fun QnASection(data: List<QnaResponseContent>, viewModel: TrainingFlowViewModel) {
-    val selectedQuestion = data.getOrNull(viewModel.selectedQuestionIndex) ?: return
+private fun QnASection(data: QnaResponseContent, viewModel: TrainingFlowViewModel) {
+    val selectedQuestion = data.question.getOrNull(viewModel.selectedQuestionIndex) ?: return
     val selectedOptions = remember {
         mutableStateListOf<OptionsContent>()
     }.also {
-        it.addAll(selectedQuestion.selectedAnswers)
+        it.addAll(selectedQuestion.selectedOptions)
     }
     val context = LocalContext.current
-    ProgressBarSections(viewModel.selectedQuestionIndex + 1, data.size)
+    ProgressBarSections(viewModel.selectedQuestionIndex + 1, data.question.size)
     SpacerHeight12()
     Text(
-        text = selectedQuestion.question.question,
+        text = selectedQuestion.question,
         color = Color.Black,
         fontWeight = FontWeight.Medium
     )
@@ -173,18 +180,18 @@ private fun QnASection(data: List<QnaResponseContent>, viewModel: TrainingFlowVi
         MultipleSelectionOptions(selectedQuestion.options, selectedOptions) { option, isSelected ->
             if (isSelected) {
                 selectedOptions.add(option)
-                selectedQuestion.selectedAnswers.add(option)
+                selectedQuestion.selectedOptions.add(option)
             } else {
                 selectedOptions.remove(option)
-                selectedQuestion.selectedAnswers.remove(option)
+                selectedQuestion.selectedOptions.remove(option)
             }
         }
     } else {
         SingleSelectionOptions(selectedQuestion.options, selectedOptions) {
             selectedOptions.clear()
             selectedOptions.add(it)
-            selectedQuestion.selectedAnswers.clear()
-            selectedQuestion.selectedAnswers.add(it)
+            selectedQuestion.selectedOptions.clear()
+            selectedQuestion.selectedOptions.add(it)
         }
     }
 
@@ -210,7 +217,7 @@ private fun QnASection(data: List<QnaResponseContent>, viewModel: TrainingFlowVi
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    if (viewModel.selectedQuestionIndex < data.size - 1) {
+                    if (viewModel.selectedQuestionIndex < data.question.size - 1) {
                         viewModel.selectedQuestionIndex++
                     } else {
                         viewModel.completeQnA(viewModel.selectedFlow?.id ?: 0, context, data)

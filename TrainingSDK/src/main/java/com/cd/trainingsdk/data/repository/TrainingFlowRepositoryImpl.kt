@@ -14,9 +14,7 @@ import com.cd.trainingsdk.domain.contents.CompleteQnAContent
 import com.cd.trainingsdk.domain.contents.CompleteQnaResponseContent
 import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
 import com.cd.trainingsdk.domain.contents.FlowListResponseContent
-import com.cd.trainingsdk.domain.contents.OptionsContent
 import com.cd.trainingsdk.domain.contents.QnaResponseContent
-import com.cd.trainingsdk.domain.contents.QuestionResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 import com.cd.trainingsdk.domain.repository.ITrainingFlowRepository
@@ -71,36 +69,10 @@ internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
         }
     }
 
-    override suspend fun getQnADetails(flowId: Int): DataResponseStatus<List<QnaResponseContent>> {
-        val qna = mutableListOf<QnaResponseContent>()
-        qna.add(
-            QnaResponseContent(
-                QuestionResponseContent("1", "What is your name?"),
-                mutableListOf(
-                    OptionsContent("1", "Arpit Katiyar"),
-                    OptionsContent("2", "Lakshay Mudgal"),
-                    OptionsContent("3", "Hello Bro"),
-                    OptionsContent("4", "I dont know")
-                ),
-                true
-            )
-        )
-        qna.add(
-            QnaResponseContent(
-                QuestionResponseContent("2", "What is your age?"),
-                mutableListOf(
-                    OptionsContent("1", "24"),
-                    OptionsContent("2", "25"),
-                    OptionsContent("3", "26"),
-                    OptionsContent("4", "27")
-                ),
-                false
-            )
-        )
-        return DataResponseStatus.success(qna)
+    override suspend fun getQnADetails(flowId: Int): DataResponseStatus<QnaResponseContent> {
         val mapper = QnAResponseEntityToContentMapper()
-        val response = networkCall<List<QnaResponseEntity>> {
-            httpClient.get("")
+        val response = networkCall<QnaResponseEntity> {
+            httpClient.get("$flowId/quiz/")
         }
 
         return when (response) {
@@ -110,8 +82,12 @@ internal class TrainingFlowRepositoryImpl(private val httpClient: HttpClient) :
             }
 
             is DataResponseStatus.Success -> {
-                val qna = response.data.mapNotNull { mapper.mapData(it) }
-                DataResponseStatus.success(qna)
+                val mappedData = mapper.mapData(response.data)
+                if (mappedData == null) {
+                    DataResponseStatus.failure("", AppErrorCodes.UNKNOWN_ERROR)
+                } else {
+                    DataResponseStatus.success(mappedData)
+                }
             }
         }
     }

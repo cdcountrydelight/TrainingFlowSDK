@@ -1,3 +1,9 @@
 package com.cd.trainingsdk.data.entity
 
-data class OptionsEntity(val optionId: String?, val option: String?)
+import com.google.gson.annotations.SerializedName
+
+
+data class OptionsEntity(
+    @SerializedName("id") val optionId: String?,
+    @SerializedName("text") val option: String?
+)

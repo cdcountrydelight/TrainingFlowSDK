@@ -14,7 +14,7 @@ internal interface ITrainingFlowRepository {
 
     suspend fun getFlowDetails(flowId: Int): DataResponseStatus<FlowDetailsResponseContent>
 
-    suspend fun getQnADetails(flowId: Int): DataResponseStatus<List<QnaResponseContent>>
+    suspend fun getQnADetails(flowId: Int): DataResponseStatus<QnaResponseContent>
 
     suspend fun completeQnA(
         flowId: Int,

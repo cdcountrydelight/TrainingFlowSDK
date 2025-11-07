@@ -1,7 +1,12 @@
 package com.cd.trainingsdk.data.entity
 
+import com.google.gson.annotations.SerializedName
+
 data class QnaResponseEntity(
-    val question: QuestionResponseEntity?,
-    val options: List<OptionsEntity>?,
-    val isMsq: Boolean? = false
+    @SerializedName("id")
+    val id: String? = null,
+    @SerializedName("questions")
+    val question: List<QuestionResponseEntity>?,
+    @SerializedName("flow_id")
+    val flowId: String? = null,
 )

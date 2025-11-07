@@ -7,13 +7,11 @@ import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 class QnAResponseEntityToContentMapper : IBaseMapper<QnaResponseEntity, QnaResponseContent?> {
     override fun mapData(data: QnaResponseEntity): QnaResponseContent? {
         val questionMapper = QuestionResponseEntityToContentMapper()
-        val optionsMapper = OptionsResponseEntityToContentMapper()
-        val mappedQuestion = questionMapper.mapData(data.question)
-        val mappedOptions = data.options?.mapNotNull { optionsMapper.mapData(it) }
-        return if (mappedQuestion == null || mappedOptions == null) {
+        val mappedQuestion = data.question?.mapNotNull { questionMapper.mapData(it) }
+        return if (data.id == null || data.flowId == null || mappedQuestion == null) {
             null
         } else {
-            QnaResponseContent(mappedQuestion, mappedOptions, data.isMsq ?: false)
+            QnaResponseContent(data.id, mappedQuestion, data.flowId)
         }
     }
 }

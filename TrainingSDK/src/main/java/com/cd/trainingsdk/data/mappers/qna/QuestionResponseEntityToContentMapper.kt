@@ -7,10 +7,18 @@ import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 class QuestionResponseEntityToContentMapper :
     IBaseMapper<QuestionResponseEntity?, QuestionResponseContent?> {
     override fun mapData(data: QuestionResponseEntity?): QuestionResponseContent? {
-        return if (data?.questionId == null || data.question.isNullOrBlank()) {
+        val optionsMapper = OptionsResponseEntityToContentMapper()
+        val mappedOptions = data?.options?.mapNotNull { optionsMapper.mapData(it) }
+        return if (data?.questionId == null || data.question.isNullOrBlank() || mappedOptions == null) {
             null
         } else {
-            QuestionResponseContent(data.questionId, data.question)
+            QuestionResponseContent(
+                data.questionId,
+                data.question,
+                mappedOptions,
+                data.isMsq ?: false,
+                data.isRequired ?: true
+            )
         }
     }
 }
