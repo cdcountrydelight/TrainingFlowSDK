@@ -1,6 +1,6 @@
 package com.cd.trainingsdk.data.mappers.flow_details_mappers
 
-import com.cd.trainingsdk.data.entity.AnnotationsResponseEntity
+import com.cd.trainingsdk.data.entity.flow_details.AnnotationsResponseEntity
 import com.cd.trainingsdk.domain.contents.flow_details.AnnotationResponseContent
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 

@@ -1,6 +1,6 @@
 package com.cd.trainingsdk.data.mappers.flow_list_mappers
 
-import com.cd.trainingsdk.data.entity.FlowListResponseEntity
+import com.cd.trainingsdk.data.entity.flow_list.FlowListResponseEntity
 import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 

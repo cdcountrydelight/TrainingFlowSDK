@@ -1,10 +1,10 @@
 package com.cd.trainingsdk.data.repository
 
-import com.cd.trainingsdk.data.entity.CompleteQnARequestEntity
-import com.cd.trainingsdk.data.entity.CompleteQuestionsRequestEntity
-import com.cd.trainingsdk.data.entity.FlowDetailsResponseEntity
-import com.cd.trainingsdk.data.entity.FlowListResponseEntity
-import com.cd.trainingsdk.data.entity.QnaResponseEntity
+import com.cd.trainingsdk.data.entity.complete_qna.CompleteQnARequestEntity
+import com.cd.trainingsdk.data.entity.complete_qna.CompleteQuestionsRequestEntity
+import com.cd.trainingsdk.data.entity.flow_details.FlowDetailsResponseEntity
+import com.cd.trainingsdk.data.entity.flow_list.FlowListResponseEntity
+import com.cd.trainingsdk.data.entity.qna_list.QnaResponseEntity
 import com.cd.trainingsdk.data.mappers.complete_training_flow.CompleteFlowResponseMapper
 import com.cd.trainingsdk.data.mappers.flow_details_mappers.FlowDetailsMapper
 import com.cd.trainingsdk.data.mappers.flow_list_mappers.FlowListMapper

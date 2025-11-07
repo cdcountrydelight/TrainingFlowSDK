@@ -1,8 +1,8 @@
-package com.cd.trainingsdk.data.entity
+package com.cd.trainingsdk.data.entity.qna_list
 
 import com.google.gson.annotations.SerializedName
 
-data class QnaResponseEntity(
+internal data class QnaResponseEntity(
     @SerializedName("id")
     val id: String? = null,
     @SerializedName("questions")

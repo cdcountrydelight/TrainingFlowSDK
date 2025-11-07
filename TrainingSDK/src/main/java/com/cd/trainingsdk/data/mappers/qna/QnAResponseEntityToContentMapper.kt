@@ -1,6 +1,6 @@
 package com.cd.trainingsdk.data.mappers.qna
 
-import com.cd.trainingsdk.data.entity.QnaResponseEntity
+import com.cd.trainingsdk.data.entity.qna_list.QnaResponseEntity
 import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 

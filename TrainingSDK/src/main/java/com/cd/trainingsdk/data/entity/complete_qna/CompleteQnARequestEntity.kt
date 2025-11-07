@@ -1,8 +1,8 @@
-package com.cd.trainingsdk.data.entity
+package com.cd.trainingsdk.data.entity.complete_qna
 
 import com.google.gson.annotations.SerializedName
 
-data class CompleteQnARequestEntity(
+internal data class CompleteQnARequestEntity(
     @SerializedName("answers")
     val answers: List<CompleteQuestionsRequestEntity>
 )

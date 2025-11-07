@@ -1,6 +1,6 @@
 package com.cd.trainingsdk.data.mappers.complete_training_flow
 
-import com.cd.trainingsdk.data.entity.CompleteFlowResponseEntity
+import com.cd.trainingsdk.data.entity.complete_flow.CompleteFlowResponseEntity
 import com.cd.trainingsdk.domain.contents.complete_flow.CompleteFlowResponseContent
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 

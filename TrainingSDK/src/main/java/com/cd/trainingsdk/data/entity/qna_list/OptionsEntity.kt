@@ -1,9 +1,9 @@
-package com.cd.trainingsdk.data.entity
+package com.cd.trainingsdk.data.entity.qna_list
 
 import com.google.gson.annotations.SerializedName
 
 
-data class OptionsEntity(
+internal data class OptionsEntity(
     @SerializedName("id") val optionId: String?,
     @SerializedName("text") val option: String?
 )
