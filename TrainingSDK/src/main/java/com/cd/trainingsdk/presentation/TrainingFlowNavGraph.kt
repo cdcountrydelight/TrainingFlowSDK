@@ -57,16 +57,11 @@ fun TrainingFlowNavGraph(
                     navController.popBackStack()
                 },
                 onNavigateToQnASection = {
-                    navController.navigate(CompletedTrainingScreenDestination(100.0)) {
+                    navController.navigate(QnAScreenDestination) {
                         popUpTo(navController.currentDestination?.id ?: return@navigate) {
                             inclusive = true
                         }
                     }
-//                    navController.navigate(QnAScreenDestination) {
-//                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
-//                            inclusive = true
-//                        }
-//                    }
                 },
                 onNavigateToCompleteTrainingFlow = {
                     navController.navigate(CompletedTrainingScreenDestination(null)) {

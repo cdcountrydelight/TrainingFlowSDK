@@ -290,20 +290,63 @@ private fun HeaderSection(calculatedScore: Double?) {
 
 @Composable
 private fun AnimatedScoreDisplay(calculatedScore: Double?) {
-    var animatedScore by remember { mutableFloatStateOf(0f) }
-    val targetScore = calculatedScore?.toFloat() ?: 0f
-    val animatedProgress by animateFloatAsState(
-        targetValue = if (animatedScore > 0) targetScore / 100f else 0f,
-        animationSpec = tween(1500, easing = FastOutSlowInEasing),
-        label = "progress"
-    )
-
     val size = 100.dp
     val strokeWidth = 8.dp
     val fontSize = 34.sp
 
-    LaunchedEffect(calculatedScore) {
-        if (calculatedScore != null) {
+    if (calculatedScore == null) {
+        // Show check icon for null score
+        Box(
+            modifier = Modifier.size(size),
+            contentAlignment = Alignment.Center
+        ) {
+            // Background circle
+            val primaryColor = MaterialTheme.colorScheme.primary
+            Canvas(
+                modifier = Modifier.size(size)
+            ) {
+                drawCircle(
+                    color = primaryColor.copy(alpha = 0.1f),
+                    radius = this.size.minDimension / 2
+                )
+                drawCircle(
+                    color = primaryColor,
+                    radius = (this.size.minDimension * 0.9f) / 2,
+                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                )
+            }
+
+            // Check icon - draw manually
+            Canvas(
+                modifier = Modifier.size(size * 0.5f)
+            ) {
+                val checkPath = androidx.compose.ui.graphics.Path().apply {
+                    moveTo(this@Canvas.size.width * 0.2f, this@Canvas.size.height * 0.5f)
+                    lineTo(this@Canvas.size.width * 0.4f, this@Canvas.size.height * 0.7f)
+                    lineTo(this@Canvas.size.width * 0.8f, this@Canvas.size.height * 0.3f)
+                }
+                drawPath(
+                    path = checkPath,
+                    color = primaryColor,
+                    style = Stroke(
+                        width = 3.dp.toPx(),
+                        cap = StrokeCap.Round,
+                        join = androidx.compose.ui.graphics.StrokeJoin.Round
+                    )
+                )
+            }
+        }
+    } else {
+        // Show animated score
+        var animatedScore by remember { mutableFloatStateOf(0f) }
+        val targetScore = calculatedScore.toFloat()
+        val animatedProgress by animateFloatAsState(
+            targetValue = if (animatedScore > 0) targetScore / 100f else 0f,
+            animationSpec = tween(1500, easing = FastOutSlowInEasing),
+            label = "progress"
+        )
+
+        LaunchedEffect(calculatedScore) {
             val animationDuration = 1500L
             val steps = 30
             val stepDuration = animationDuration / steps
@@ -313,69 +356,68 @@ private fun AnimatedScoreDisplay(calculatedScore: Double?) {
                 animatedScore = (targetScore * i) / steps
             }
         }
-    }
 
-    Box(
-        modifier = Modifier
-            .size(size),
-        contentAlignment = Alignment.Center,
-    ) {
-        // Background circle with gradient
-        Canvas(
-            modifier = Modifier.size(size)
+        Box(
+            modifier = Modifier.size(size),
+            contentAlignment = Alignment.Center,
         ) {
-            drawCircle(
-                brush = Brush.radialGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.1f),
-                        Color.Transparent
-                    )
-                ),
-                radius = this.size.minDimension / 2
-            )
-        }
-
-        // Progress ring
-        Canvas(
-            modifier = Modifier.size(size * 0.9f)
-        ) {
-            val strokeWidthPx = strokeWidth.toPx()
-            val radius = (this.size.minDimension - strokeWidthPx) / 2
-            val startAngle = -90f
-
-            // Background ring
-            drawCircle(
-                color = Color.Gray.copy(alpha = 0.1f),
-                radius = radius,
-                style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
-            )
+            // Background circle with gradient
+            Canvas(
+                modifier = Modifier.size(size)
+            ) {
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.1f),
+                            Color.Transparent
+                        )
+                    ),
+                    radius = this.size.minDimension / 2
+                )
+            }
 
             // Progress ring
-            drawArc(
-                brush = Brush.sweepGradient(
-                    colors = listOf(
-                        Color(0xFF4CAF50),
-                        Color(0xFF8BC34A),
-                        Color(0xFF4CAF50)
-                    )
-                ),
-                startAngle = startAngle,
-                sweepAngle = 360f * animatedProgress,
-                useCenter = false,
-                style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
-            )
-        }
+            Canvas(
+                modifier = Modifier.size(size * 0.9f)
+            ) {
+                val strokeWidthPx = strokeWidth.toPx()
+                val radius = (this.size.minDimension - strokeWidthPx) / 2
+                val startAngle = -90f
 
-        // Score text
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "${animatedScore.toInt()}",
-                fontSize = fontSize,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
+                // Background ring
+                drawCircle(
+                    color = Color.Gray.copy(alpha = 0.1f),
+                    radius = radius,
+                    style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
+                )
+
+                // Progress ring
+                drawArc(
+                    brush = Brush.sweepGradient(
+                        colors = listOf(
+                            Color(0xFF4CAF50),
+                            Color(0xFF8BC34A),
+                            Color(0xFF4CAF50)
+                        )
+                    ),
+                    startAngle = startAngle,
+                    sweepAngle = 360f * animatedProgress,
+                    useCenter = false,
+                    style = Stroke(strokeWidthPx, cap = StrokeCap.Round)
+                )
+            }
+
+            // Score text
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${animatedScore.toInt()}",
+                    fontSize = fontSize,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
