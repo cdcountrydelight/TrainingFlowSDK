@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -70,11 +71,15 @@ import com.cd.trainingsdk.R
 import com.cd.trainingsdk.domain.contents.AnnotationItemResponseContent
 import com.cd.trainingsdk.domain.contents.StepsResponseContent
 import com.cd.trainingsdk.presentation.ImageLoader
+import com.cd.trainingsdk.presentation.ui.beans.ButtonHandlerBean
 import com.cd.trainingsdk.presentation.ui.beans.Tuple4
 import com.cd.trainingsdk.presentation.ui.common.EmptySection
+import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog
 import com.cd.trainingsdk.presentation.ui.common.LoadingSection
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight12
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
+import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
+import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
 import kotlinx.coroutines.delay
 import kotlin.math.min
 
@@ -82,7 +87,8 @@ import kotlin.math.min
 internal fun FlowDetailScreen(
     viewModel: TrainingFlowViewModel,
     onBackClicked: () -> Unit,
-    onNavigateToQnASection: () -> Unit
+    onNavigateToQnASection: () -> Unit,
+    onNavigateToCompleteTrainingFlow: () -> Unit
 ) {
 
     val steps = remember {
@@ -116,16 +122,77 @@ internal fun FlowDetailScreen(
                         currentStepIndex++
                     } else {
                         viewModel.showToolTip = false
-                        viewModel.completeTraining(viewModel.selectedFlow?.id ?: 0, context)
-                        onNavigateToQnASection()
+                        viewModel.getQuestionsList(viewModel.selectedFlow?.id ?: 0, context)
                     }
                 },
             )
         }
     }
 
+    HandleQuestionAndAnswerStateFlow(
+        viewModel,
+        onNavigateToQnASection,
+        onNavigateToCompleteTrainingFlow
+    )
+
     LaunchedEffect(Unit) {
         viewModel.showToolTip = true
+    }
+}
+
+
+@Composable
+private fun HandleQuestionAndAnswerStateFlow(
+    viewModel: TrainingFlowViewModel,
+    onNavigateToQnASection: () -> Unit,
+    onNavigateToCompleteTrainingFlow: () -> Unit
+) {
+
+    val qnaStateFlow = viewModel.qnaStateFlow.collectAsStateWithLifecycle()
+
+    var isResponseHandled by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    when (val response = qnaStateFlow.value) {
+        is DataUiResponseStatus.Loading -> {
+            isResponseHandled = false
+            LoadingSection()
+        }
+
+        is DataUiResponseStatus.Success -> {
+            if (!isResponseHandled) {
+                onNavigateToQnASection()
+                isResponseHandled = true
+            }
+        }
+
+        is DataUiResponseStatus.Failure -> {
+            if (!isResponseHandled) {
+                val errorMessage = remember {
+                    context.getErrorMessage(
+                        response.errorMessage,
+                        response.errorCode
+                    )
+                }
+                if (errorMessage.contains("quiz not found", ignoreCase = true)) {
+                    onNavigateToCompleteTrainingFlow()
+                    isResponseHandled = true
+                } else {
+                    ErrorAlertDialog(
+                        errorMessage = errorMessage,
+                        negativeButton = ButtonHandlerBean(
+                            buttonText = stringResource(R.string.ok),
+                            onButtonClicked = {
+                                isResponseHandled = true
+                            }
+                        )
+                    )
+                }
+            }
+        }
+
+        else -> {}
     }
 }
 

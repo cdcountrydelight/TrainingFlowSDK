@@ -25,6 +25,7 @@ fun TrainingFlowNavGraph(
     navController: NavHostController = rememberNavController(),
     onBackPressed: () -> Unit,
 ) {
+
     val viewModel: TrainingFlowViewModel = viewModel()
     LaunchedEffect(Unit) {
         viewModel.setUnAuthorizedCodes(unAuthorizedExceptionCodes)
@@ -57,6 +58,13 @@ fun TrainingFlowNavGraph(
                 },
                 onNavigateToQnASection = {
                     navController.navigate(QnAScreenDestination) {
+                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToCompleteTrainingFlow = {
+                    navController.navigate(CompletedTrainingScreenDestination(null)) {
                         popUpTo(navController.currentDestination?.id ?: return@navigate) {
                             inclusive = true
                         }
