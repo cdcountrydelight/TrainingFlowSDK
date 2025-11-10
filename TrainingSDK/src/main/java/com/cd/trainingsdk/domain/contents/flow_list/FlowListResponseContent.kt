@@ -1,4 +1,4 @@
-package com.cd.trainingsdk.domain.contents
+package com.cd.trainingsdk.domain.contents.flow_list
 
 internal data class FlowListResponseContent(
     val id: Int,
@@ -8,5 +8,3 @@ internal data class FlowListResponseContent(
     val stepCount: Int? = null,
     val userProgress: UserProgressResponseContent? = null,
 )
-
-

@@ -1,7 +1,7 @@
 package com.cd.trainingsdk.data.mappers.flow_details_mappers
 
-import com.cd.trainingsdk.data.entity.AnnotationItemResponseEntity
-import com.cd.trainingsdk.domain.contents.AnnotationItemResponseContent
+import com.cd.trainingsdk.data.entity.flow_details.AnnotationItemResponseEntity
+import com.cd.trainingsdk.domain.contents.flow_details.AnnotationItemResponseContent
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
 
 internal class AnnotationItemMapper() :

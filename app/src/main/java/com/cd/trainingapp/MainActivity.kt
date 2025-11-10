@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TrainingAppTheme {
                 TrainingFlowNavGraph(
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1NDIxMiwiZXhwIjoxNzYwMDc5NDAwLCJpYXQiOjE3NTk5OTMwMDB9.bsOaucBaecWOL87J8oIJiDmWQ0ms0Bm3oHPanyFpfhY",
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1NDIxMiwiZXhwIjoxNzYyODQxNjQxLCJpYXQiOjE3NjI3NTUyNDF9.hwOewqUfln6FYCm3HeckXWa3uTDIL_oKEQq0QfobjWU",
                     appName = "CD Partner App",
                     packageName = "deliveryapp.countrydelight.in.deliveryapp"
                 ) {

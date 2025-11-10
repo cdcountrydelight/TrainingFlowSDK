@@ -1,5 +1,6 @@
-package com.cd.trainingsdk.domain.contents
+package com.cd.trainingsdk.domain.contents.flow_details
 
+import com.cd.trainingsdk.domain.contents.flow_list.UserProgressResponseContent
 import kotlinx.serialization.Serializable
 
 @Serializable

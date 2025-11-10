@@ -6,7 +6,7 @@ import android.net.NetworkCapabilities
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 import com.cd.trainingsdk.domain.domain_utils.IBaseMapper
-import com.cd.trainingsdk.domain.domain_utils.SessionManager
+import com.cd.trainingsdk.domain.domain_utils.TrainingSDKSessionManager
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -70,7 +70,7 @@ internal object NetworkCallHelper {
 
 
             is AuthenticationException -> {
-                SessionManager.triggerLogout()
+                TrainingSDKSessionManager.triggerLogout()
                 NetworkError(
                     "",
                     AppErrorCodes.AUTHENTICATION_EXCEPTION

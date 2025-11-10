@@ -2,18 +2,24 @@ package com.cd.trainingsdk.presentation.ui.training_flow
 
 import android.content.Context
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.cd.trainingsdk.R
 import com.cd.trainingsdk.data.network.ConstantHelper.unAuthorizedExceptionCodes
-import com.cd.trainingsdk.domain.contents.CompleteFlowResponseContent
-import com.cd.trainingsdk.domain.contents.FlowDetailsResponseContent
-import com.cd.trainingsdk.domain.contents.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.complete_flow.CompleteFlowResponseContent
+import com.cd.trainingsdk.domain.contents.complete_qna.CompleteQnAContent
+import com.cd.trainingsdk.domain.contents.complete_qna.CompleteQnaResponseContent
+import com.cd.trainingsdk.domain.contents.flow_details.FlowDetailsResponseContent
+import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
+import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
-import com.cd.trainingsdk.domain.use_cases.CompleteFlowUseCase
+import com.cd.trainingsdk.domain.use_cases.TrainingCompletedUseCase
+import com.cd.trainingsdk.domain.use_cases.CompleteQnAUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowDetailsUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowsListUseCase
+import com.cd.trainingsdk.domain.use_cases.GetQnAUseCase
 import com.cd.trainingsdk.presentation.ImageLoader
 import com.cd.trainingsdk.presentation.base.BaseViewModel
 import com.cd.trainingsdk.presentation.ui.beans.ImageLoadRequest
@@ -53,6 +59,19 @@ internal class TrainingFlowViewModel : BaseViewModel() {
 
     internal var showToolTip: Boolean by mutableStateOf(true)
 
+    private val _qnaStateFlow: MutableStateFlow<DataUiResponseStatus<QnaResponseContent>> =
+        MutableStateFlow(DataUiResponseStatus.Companion.none())
+
+    internal val qnaStateFlow = _qnaStateFlow.asStateFlow()
+
+    private val _qnaCompleteStateFlow: MutableStateFlow<DataUiResponseStatus<CompleteQnaResponseContent>> =
+        MutableStateFlow(DataUiResponseStatus.Companion.none())
+
+    internal val qnaCompleteStateFlow = _qnaCompleteStateFlow.asStateFlow()
+
+
+    var selectedQuestionIndex by mutableIntStateOf(0)
+
 
     fun getFlowsList(context: Context, authToken: String, packageName: String) {
         authenticationToken = authToken
@@ -82,6 +101,7 @@ internal class TrainingFlowViewModel : BaseViewModel() {
     }
 
     fun getFlowDetails(flowId: Int, context: Context) {
+        resetAllStates()
         _flowDetailsStateFlow.value = DataUiResponseStatus.Companion.loading()
         backgroundCall {
             val response = GetFlowDetailsUseCase().invoke(context, flowId, authenticationToken)
@@ -119,6 +139,40 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         }
     }
 
+
+    fun resetAllStates() {
+        _flowsListDetailStateFlow.value = DataUiResponseStatus.none()
+        _qnaStateFlow.value = DataUiResponseStatus.none()
+        selectedQuestionIndex = 0
+        _qnaCompleteStateFlow.value = DataUiResponseStatus.none()
+        resetCompleteTraining()
+    }
+
+    fun getQuestionsList(flowId: Int, context: Context) {
+        _qnaStateFlow.value = DataUiResponseStatus.loading()
+        selectedQuestionIndex = 0
+        backgroundCall {
+            _qnaStateFlow.value =
+                GetQnAUseCase().invoke(context, authenticationToken, flowId)
+                    .mapToDataUiResponseStatus()
+        }
+    }
+
+    fun completeQnA(flowId: Int, context: Context, questionsDetails: QnaResponseContent) {
+        _qnaCompleteStateFlow.value = DataUiResponseStatus.loading()
+        backgroundCall {
+            _qnaCompleteStateFlow.value = CompleteQnAUseCase().invoke(
+                context,
+                authenticationToken,
+                flowId,
+                questionsDetails.question.map { question ->
+                    CompleteQnAContent(
+                        question.questionId,
+                        question.selectedOptions.map { it.optionId })
+                }).mapToDataUiResponseStatus()
+        }
+    }
+
     fun resetCompleteTraining() {
         _trainingCompletedStateFlow.value = DataUiResponseStatus.none()
     }
@@ -127,11 +181,10 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         _trainingCompletedStateFlow.value = DataUiResponseStatus.loading()
         backgroundCall {
             _trainingCompletedStateFlow.value =
-                CompleteFlowUseCase().invoke(context, flowId, authenticationToken)
+                TrainingCompletedUseCase().invoke(context, flowId, authenticationToken)
                     .mapToDataUiResponseStatus()
         }
     }
-
 
     fun setUnAuthorizedCodes(unauthorizedCodes: List<Int>) {
         unAuthorizedExceptionCodes = unauthorizedCodes

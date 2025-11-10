@@ -1,4 +1,4 @@
-package com.cd.trainingsdk.data.entity
+package com.cd.trainingsdk.data.entity.complete_flow
 
 import com.google.gson.annotations.SerializedName
 

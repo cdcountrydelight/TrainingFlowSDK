@@ -1,4 +1,4 @@
-package com.cd.trainingsdk.domain.contents
+package com.cd.trainingsdk.domain.contents.complete_flow
 
 internal data class CompleteFlowResponseContent(
     val message: String? = null,

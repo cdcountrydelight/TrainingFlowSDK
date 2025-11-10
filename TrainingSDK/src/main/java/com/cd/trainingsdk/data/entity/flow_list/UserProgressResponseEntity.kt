@@ -1,4 +1,4 @@
-package com.cd.trainingsdk.data.entity
+package com.cd.trainingsdk.data.entity.flow_list
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

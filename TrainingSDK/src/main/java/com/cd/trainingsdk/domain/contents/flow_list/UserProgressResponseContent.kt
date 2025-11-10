@@ -1,4 +1,4 @@
-package com.cd.trainingsdk.domain.contents
+package com.cd.trainingsdk.domain.contents.flow_list
 
 import kotlinx.serialization.Serializable
 
