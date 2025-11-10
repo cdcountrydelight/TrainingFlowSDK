@@ -66,7 +66,7 @@ internal fun QnAScreen(
                 .padding(it)
                 .padding(16.dp)
         ) {
-            HandleQuestionAndAnswerStateFlow(viewModel)
+            HandleQuestionAndAnswerStateFlow(viewModel,onNavigateToCompleteTraining)
             HandleQuestionAndAnswerCompleteStateFlow(viewModel, onNavigateToCompleteTraining)
         }
     }
@@ -76,7 +76,10 @@ internal fun QnAScreen(
 }
 
 @Composable
-private fun HandleQuestionAndAnswerStateFlow(viewModel: TrainingFlowViewModel) {
+private fun HandleQuestionAndAnswerStateFlow(
+    viewModel: TrainingFlowViewModel,
+    onNavigateToCompleteTraining: (Double?) -> Unit
+) {
 
     val qnaStateFlow = viewModel.qnaStateFlow.collectAsStateWithLifecycle()
 
@@ -90,6 +93,11 @@ private fun HandleQuestionAndAnswerStateFlow(viewModel: TrainingFlowViewModel) {
         }
 
         is DataUiResponseStatus.Success -> {
+            if (!isResponseHandled && response.data.calculatedScore != null) {
+                onNavigateToCompleteTraining(response.data.calculatedScore)
+                isResponseHandled = true
+                return
+            }
             QnASection(response.data, viewModel)
         }
 

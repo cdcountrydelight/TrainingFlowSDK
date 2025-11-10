@@ -11,7 +11,7 @@ internal class QnAResponseEntityToContentMapper : IBaseMapper<QnaResponseEntity,
         return if (data.id == null || data.flowId == null || mappedQuestion == null) {
             null
         } else {
-            QnaResponseContent(data.id, mappedQuestion, data.flowId)
+            QnaResponseContent(data.id, mappedQuestion, data.flowId,data.calculatedScore)
         }
     }
 }

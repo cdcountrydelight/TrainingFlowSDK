@@ -9,4 +9,6 @@ internal data class QnaResponseEntity(
     val question: List<QuestionResponseEntity>?,
     @SerializedName("flow_id")
     val flowId: String? = null,
+    @SerializedName("calculated_score")
+    val calculatedScore: Double? = null
 )
