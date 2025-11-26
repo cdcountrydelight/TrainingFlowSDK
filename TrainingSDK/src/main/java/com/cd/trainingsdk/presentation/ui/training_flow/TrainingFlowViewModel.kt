@@ -15,11 +15,11 @@ import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
 import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
-import com.cd.trainingsdk.domain.use_cases.TrainingCompletedUseCase
 import com.cd.trainingsdk.domain.use_cases.CompleteQnAUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowDetailsUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowsListUseCase
 import com.cd.trainingsdk.domain.use_cases.GetQnAUseCase
+import com.cd.trainingsdk.domain.use_cases.TrainingCompletedUseCase
 import com.cd.trainingsdk.presentation.ImageLoader
 import com.cd.trainingsdk.presentation.base.BaseViewModel
 import com.cd.trainingsdk.presentation.ui.beans.ImageLoadRequest
@@ -73,13 +73,16 @@ internal class TrainingFlowViewModel : BaseViewModel() {
     var selectedQuestionIndex by mutableIntStateOf(0)
 
 
+    var isProdEnv: Boolean = true
+
+
     fun getFlowsList(context: Context, authToken: String, packageName: String) {
         authenticationToken = authToken
         if (_flowsListDetailStateFlow.value is DataUiResponseStatus.Success) return
         _flowsListDetailStateFlow.value = DataUiResponseStatus.Companion.loading()
         backgroundCall {
             _flowsListDetailStateFlow.value =
-                GetFlowsListUseCase().invoke(context, packageName, authenticationToken)
+                GetFlowsListUseCase().invoke(context, packageName, authenticationToken, isProdEnv)
                     .mapToDataUiResponseStatus()
         }
     }
@@ -88,8 +91,9 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         authenticationToken = authToken
         _isRefreshing.value = true
         backgroundCall {
-            val result = GetFlowsListUseCase().invoke(context, packageName, authenticationToken)
-                .mapToDataUiResponseStatus()
+            val result =
+                GetFlowsListUseCase().invoke(context, packageName, authenticationToken, isProdEnv)
+                    .mapToDataUiResponseStatus()
             _flowsListDetailStateFlow.value = result
             _isRefreshing.value = false
         }
@@ -104,7 +108,8 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         resetAllStates()
         _flowDetailsStateFlow.value = DataUiResponseStatus.Companion.loading()
         backgroundCall {
-            val response = GetFlowDetailsUseCase().invoke(context, flowId, authenticationToken)
+            val response =
+                GetFlowDetailsUseCase().invoke(context, flowId, authenticationToken, isProdEnv)
             _flowDetailsStateFlow.value =
                 when (response) {
                     is DataResponseStatus.Success -> {
@@ -153,7 +158,7 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         selectedQuestionIndex = 0
         backgroundCall {
             _qnaStateFlow.value =
-                GetQnAUseCase().invoke(context, authenticationToken, flowId)
+                GetQnAUseCase().invoke(context, authenticationToken, flowId, isProdEnv)
                     .mapToDataUiResponseStatus()
         }
     }
@@ -169,7 +174,8 @@ internal class TrainingFlowViewModel : BaseViewModel() {
                     CompleteQnAContent(
                         question.questionId,
                         question.selectedOptions.map { it.optionId })
-                }).mapToDataUiResponseStatus()
+                }, isProdEnv
+            ).mapToDataUiResponseStatus()
         }
     }
 
@@ -181,13 +187,14 @@ internal class TrainingFlowViewModel : BaseViewModel() {
         _trainingCompletedStateFlow.value = DataUiResponseStatus.loading()
         backgroundCall {
             _trainingCompletedStateFlow.value =
-                TrainingCompletedUseCase().invoke(context, flowId, authenticationToken)
+                TrainingCompletedUseCase().invoke(context, flowId, authenticationToken, isProdEnv)
                     .mapToDataUiResponseStatus()
         }
     }
 
-    fun setUnAuthorizedCodes(unauthorizedCodes: List<Int>) {
+    fun setUnAuthorizedCodes(unauthorizedCodes: List<Int>, isProdEnv: Boolean) {
         unAuthorizedExceptionCodes = unauthorizedCodes
+        this.isProdEnv = isProdEnv
     }
 
     override fun onCleared() {

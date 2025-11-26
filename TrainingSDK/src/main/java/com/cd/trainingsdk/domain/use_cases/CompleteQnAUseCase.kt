@@ -12,8 +12,12 @@ internal class CompleteQnAUseCase {
         context: Context,
         authToken: String,
         flowId: Int,
-        completeQnAContent: List<CompleteQnAContent>
+        completeQnAContent: List<CompleteQnAContent>,
+        isProdEnv: Boolean
     ): DataResponseStatus<CompleteQnaResponseContent> {
-        return getTrainingFlowRepository(context, authToken).completeQnA(flowId, completeQnAContent)
+        return getTrainingFlowRepository(context, authToken, isProdEnv).completeQnA(
+            flowId,
+            completeQnAContent
+        )
     }
 }

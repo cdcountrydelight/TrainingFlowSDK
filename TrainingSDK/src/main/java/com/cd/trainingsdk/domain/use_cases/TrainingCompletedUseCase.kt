@@ -10,8 +10,9 @@ internal class TrainingCompletedUseCase {
     suspend fun invoke(
         context: Context,
         flowId: Int,
-        authToken: String
+        authToken: String,
+        isProdEnv: Boolean
     ): DataResponseStatus<CompleteFlowResponseContent> {
-        return getTrainingFlowRepository(context, authToken).completeTraining(flowId)
+        return getTrainingFlowRepository(context, authToken, isProdEnv).completeTraining(flowId)
     }
 }
