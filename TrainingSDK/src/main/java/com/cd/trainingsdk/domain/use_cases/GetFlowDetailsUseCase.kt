@@ -10,8 +10,9 @@ internal class GetFlowDetailsUseCase {
     suspend fun invoke(
         context: Context,
         flowId: Int,
-        authToken: String
+        authToken: String,
+        isProdEnv: Boolean
     ): DataResponseStatus<FlowDetailsResponseContent> {
-        return getTrainingFlowRepository(context, authToken).getFlowDetails(flowId)
+        return getTrainingFlowRepository(context, authToken, isProdEnv).getFlowDetails(flowId)
     }
 }

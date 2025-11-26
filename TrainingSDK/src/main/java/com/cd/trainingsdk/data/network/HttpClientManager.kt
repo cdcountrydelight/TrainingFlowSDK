@@ -19,15 +19,21 @@ internal object HttpClientManager {
     @Volatile
     private var httpClient: HttpClient? = null
 
-    fun getInstance(context: Context, authToken: String): HttpClient {
+    fun getInstance(context: Context, authToken: String, isProdEnv: Boolean): HttpClient {
         return httpClient ?: synchronized(this) {
-            httpClient ?: createHttpClient(context, authToken).also { httpClient = it }
+            httpClient ?: createHttpClient(context, authToken, isProdEnv).also { httpClient = it }
         }
     }
 
-    private fun createHttpClient(context: Context, authToken: String): HttpClient {
+    private fun createHttpClient(
+        context: Context,
+        authToken: String,
+        isProdEnv: Boolean
+    ): HttpClient {
         val engine = OkHttp.create {
-            addInterceptor(getChuckerInterceptor(context))
+            if (!isProdEnv) {
+                addInterceptor(getChuckerInterceptor(context))
+            }
             addInterceptor(LibraryNetworkInterceptorImpl(context))
 
         }
@@ -40,7 +46,7 @@ internal object HttpClientManager {
             }
 
             defaultRequest {
-                url("https://qa-stock.countrydelight.in/api/cd_training/flows/")
+                url(if (isProdEnv) "https://stock.countrydelight.in/api/cd_training/flows/" else "https://qa-stock.countrydelight.in/api/cd_training/flows/")
                 contentType(ContentType.Application.Json)
                 headers {
                     append("Authorization", "Bearer $authToken")

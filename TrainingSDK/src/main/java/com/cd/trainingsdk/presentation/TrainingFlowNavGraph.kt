@@ -23,12 +23,13 @@ fun TrainingFlowNavGraph(
     appName: String = packageName,
     unAuthorizedExceptionCodes: List<Int> = listOf(401),
     navController: NavHostController = rememberNavController(),
+    isProdEnv: Boolean,
     onBackPressed: () -> Unit,
 ) {
 
     val viewModel: TrainingFlowViewModel = viewModel()
     LaunchedEffect(Unit) {
-        viewModel.setUnAuthorizedCodes(unAuthorizedExceptionCodes)
+        viewModel.setUnAuthorizedCodes(unAuthorizedExceptionCodes, isProdEnv)
     }
     NavHost(
         modifier = modifier,

@@ -10,8 +10,9 @@ internal class GetFlowsListUseCase {
     suspend fun invoke(
         context: Context,
         packageName: String,
-        authToken: String
+        authToken: String,
+        isProdEnv: Boolean
     ): DataResponseStatus<List<FlowListResponseContent>> {
-        return getTrainingFlowRepository(context, authToken).getFlowsList(packageName)
+        return getTrainingFlowRepository(context, authToken, isProdEnv).getFlowsList(packageName)
     }
 }
