@@ -15,23 +15,21 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -58,6 +55,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,6 +66,8 @@ import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog
 import com.cd.trainingsdk.presentation.ui.common.LoadingSection
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight12
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight16
+import com.cd.trainingsdk.presentation.ui.common.SpacerWidth16
+import com.cd.trainingsdk.presentation.ui.common.SpacerWidth8
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
@@ -208,61 +208,40 @@ private fun TrainingCompletedSection(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(horizontal = 16.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 SpacerHeight12()
                 HeaderSection(calculatedScore)
-                GlassmorphismCard(flowName)
-                Column(
+                CongratulationsCard(flowName)
+                TrainingSummaryCard(calculatedScore, flowName)
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .padding(top = 16.dp)
                 ) {
-                    // Primary button with gradient
-                    Button(
+                    OutlinedButton(
                         onClick = {
                             viewModel.resetCompleteTraining()
                             onGoToHome()
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp),
-                        shape = RoundedCornerShape(30.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 8.dp,
-                            pressedElevation = 12.dp
-                        )
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             text = stringResource(R.string.go_to_home),
-                            color = Color.White,
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.SemiBold
                         )
                     }
-
-                    // Secondary button with outline
-                    TextButton(
+                    SpacerWidth16()
+                    Button(
                         onClick = {
                             viewModel.resetCompleteTraining()
                             onStartNextFlow()
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp),
-                        shape = RoundedCornerShape(30.dp)
+                        modifier = Modifier.weight(1f),
                     ) {
                         Text(
                             text = stringResource(R.string.start_next_flow),
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -275,7 +254,6 @@ private fun TrainingCompletedSection(
         }
     }
 }
-
 
 @Composable
 private fun HeaderSection(calculatedScore: Double?) {
@@ -465,61 +443,82 @@ private fun GradeIndicator(score: Double) {
 }
 
 @Composable
-private fun GlassmorphismCard(flowName: String?) {
-
-    Card(
+private fun CongratulationsCard(flowName: String?) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = 16.dp,
-                shape = RoundedCornerShape(24.dp),
-                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-            ),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-        )
+            .padding(horizontal = 8.dp, vertical = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.05f),
-                            Color.Transparent
-                        )
-                    )
-                )
+        Text(
+            text = stringResource(R.string.congratulations),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
         )
+        Text(
+            text = buildAnnotatedString {
+                append(stringResource(R.string.you_have_successfully_completed_training_for))
+                withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                    append(flowName ?: stringResource(R.string.untitled_flow))
+                }
+                append(stringResource(R.string.you_can_revisit_this_training_anytime_from_the_flow_list))
+            },
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.congratulations),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center
+@Composable
+private fun TrainingSummaryCard(score: Double?, flowName: String?) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                0.8.dp,
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                RoundedCornerShape(12.dp)
             )
-            Text(
-                text = buildAnnotatedString {
-                    append(stringResource(R.string.you_have_successfully_completed_training_for))
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                        append(flowName ?: stringResource(R.string.untitled_flow))
-                    }
-                    append(stringResource(R.string.you_can_revisit_this_training_anytime_from_the_flow_list))
-                },
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
-        }
+            .padding(16.dp)
+    ) {
+        SummaryRow(
+            label = "Training",
+            value = flowName ?: "-"
+        )
+        SummaryRow(
+            label = "Score",
+            value = score?.let { "${it.toInt()}%" } ?: "Completed"
+        )
+        SummaryRow(
+            label = "Status",
+            value = stringResource(R.string.completed)
+        )
+    }
+}
+
+@Composable
+private fun SummaryRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        SpacerWidth8()
+        Text(
+            value,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -527,7 +526,7 @@ private fun GlassmorphismCard(flowName: String?) {
 private fun ConfettiAnimation() {
     // Create 4 waves of particles
     val particleWaves = remember {
-        List(4) { waveIndex ->
+        List(5) { waveIndex ->
             List(40) {
                 ConfettiParticle(
                     x = kotlin.random.Random.nextFloat(),
