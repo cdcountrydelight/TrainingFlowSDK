@@ -16,7 +16,8 @@ class MainActivity : ComponentActivity() {
                 TrainingFlowNavGraph(
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1NDIxMiwiZXhwIjoxNzY2NTUyODQ3LCJpYXQiOjE3NjY0NjY0NDd9.61aSDRZL-72pe1Q8mU4Ig4Ta8xWsfWPF4OLy0OqtJng",
                     appName = "CD Partner App",
-                    packageName = "deliveryapp.countrydelight.in.deliveryapp"
+                    packageName = "deliveryapp.countrydelight.in.deliveryapp",
+                    isProdEnv = false
                 ) {
 
                 }

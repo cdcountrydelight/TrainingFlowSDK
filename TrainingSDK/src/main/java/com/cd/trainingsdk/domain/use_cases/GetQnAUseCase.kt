@@ -10,8 +10,9 @@ internal class GetQnAUseCase {
     suspend fun invoke(
         context: Context,
         authToken: String,
-        flowId: Int
+        flowId: Int,
+        isProdEnv: Boolean
     ): DataResponseStatus<QnaResponseContent> {
-        return getTrainingFlowRepository(context, authToken).getQnADetails(flowId)
+        return getTrainingFlowRepository(context, authToken, isProdEnv).getQnADetails(flowId)
     }
 }

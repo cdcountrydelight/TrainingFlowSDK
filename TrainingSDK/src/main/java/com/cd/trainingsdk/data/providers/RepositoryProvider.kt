@@ -8,7 +8,8 @@ import com.cd.trainingsdk.domain.repository.ITrainingFlowRepository
 
 internal fun getTrainingFlowRepository(
     context: Context,
-    authToken: String
+    authToken: String,
+    isProdEnv: Boolean
 ): ITrainingFlowRepository {
-    return TrainingFlowRepositoryImpl(HttpClientManager.getInstance(context, authToken))
+    return TrainingFlowRepositoryImpl(HttpClientManager.getInstance(context, authToken, isProdEnv))
 }
