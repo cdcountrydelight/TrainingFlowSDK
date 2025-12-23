@@ -58,7 +58,7 @@ internal fun QnAScreen(
     val context = LocalContext.current
     Scaffold(topBar = {
         TopAppBar(title = {
-            Text("Quick Check")
+            Text(stringResource(R.string.quick_check))
         })
     }) {
         Column(
@@ -211,7 +211,7 @@ private fun QnASection(data: QnaResponseContent, viewModel: TrainingFlowViewMode
                         viewModel.selectedQuestionIndex--
                     }
                 }) {
-                    Text("Previous")
+                    Text(stringResource(R.string.previous))
                 }
             }
         }
@@ -221,7 +221,7 @@ private fun QnASection(data: QnaResponseContent, viewModel: TrainingFlowViewMode
                 if (selectedOptions.isEmpty()) {
                     Toast.makeText(
                         context,
-                        "Please select answer for this question",
+                        context.getString(R.string.please_select_answer_for_this_question),
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
@@ -232,7 +232,7 @@ private fun QnASection(data: QnaResponseContent, viewModel: TrainingFlowViewMode
                     }
                 }
             }) {
-                Text("Next")
+                Text(stringResource(R.string.next))
             }
         }
     }

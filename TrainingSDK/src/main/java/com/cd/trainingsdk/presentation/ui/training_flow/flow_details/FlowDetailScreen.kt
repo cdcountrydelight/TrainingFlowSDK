@@ -247,7 +247,7 @@ private fun ErrorSection() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Failed to load image",
+            text = stringResource(R.string.failed_to_load_image),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.error
         )

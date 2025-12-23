@@ -27,6 +27,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -62,7 +64,7 @@ import com.cd.trainingsdk.presentation.ui.common.EmptySection
 import com.cd.trainingsdk.presentation.ui.common.ErrorAlertDialog
 import com.cd.trainingsdk.presentation.ui.common.LoadingSection
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight4
-import com.cd.trainingsdk.presentation.ui.common.SpacerHeight8
+import com.cd.trainingsdk.presentation.ui.common.SpacerWidth16
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
@@ -310,19 +312,22 @@ private fun FlowsList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HeaderSection(appName: String, modifier: Modifier) {
+    var showLanguageBottomSheet by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.size(90.dp),
+            modifier = Modifier.size(70.dp),
             contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
-                    .size(85.dp)
+                    .size(65.dp)
                     .background(
                         color = Color.White.copy(alpha = 0.2f),
                         shape = CircleShape
@@ -330,7 +335,7 @@ private fun HeaderSection(appName: String, modifier: Modifier) {
             )
             Box(
                 modifier = Modifier
-                    .size(75.dp)
+                    .size(55.dp)
                     .shadow(
                         elevation = 12.dp,
                         shape = CircleShape,
@@ -345,18 +350,18 @@ private fun HeaderSection(appName: String, modifier: Modifier) {
                 Image(
                     painter = painterResource(R.drawable.app_logo),
                     contentDescription = "App Logo",
-                    modifier = Modifier.size(50.dp),
+                    modifier = Modifier.size(40.dp),
                     contentScale = ContentScale.Fit
                 )
             }
         }
-        Spacer(modifier = Modifier.width(20.dp))
+        SpacerWidth16()
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = appName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontSize = 26.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 style = MaterialTheme.typography.headlineMedium.copy(
@@ -367,18 +372,42 @@ private fun HeaderSection(appName: String, modifier: Modifier) {
                     )
                 )
             )
-            SpacerHeight8()
+            SpacerHeight4()
             Text(
                 text = stringResource(R.string.training_platform),
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.White.copy(alpha = 0.9f),
                 letterSpacing = 1.sp
             )
         }
+        IconButton(
+            onClick = {
+                showLanguageBottomSheet = true
+            },
+            modifier = Modifier
+                .size(38.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White.copy(alpha = 0.6f))
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_change_language),
+                null,
+                modifier = Modifier.size(26.dp)
+            )
+        }
+    }
+    if (showLanguageBottomSheet) {
+        LanguageBottomSheet(
+            onLanguageSelected = {
+                showLanguageBottomSheet = false
+            },
+            onDismiss = {
+                showLanguageBottomSheet = false
+            }
+        )
     }
 }
-
 
 @Composable
 private fun StatusCard(flows: List<FlowListResponseContent>) {
@@ -516,7 +545,8 @@ private fun FlowItem(
 
                 SpacerHeight4()
                 Text(
-                    text = flow.description?.ifBlank {stringResource(R.string.no_description_available) } ?: stringResource(R.string.no_description_available),
+                    text = flow.description?.ifBlank { stringResource(R.string.no_description_available) }
+                        ?: stringResource(R.string.no_description_available),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
@@ -536,5 +566,6 @@ private fun FlowItem(
         )
     }
 }
+
 
 

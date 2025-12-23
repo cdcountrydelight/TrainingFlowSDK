@@ -19,18 +19,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cd.trainingsdk.R
 
 @Composable
 internal fun EmptySection(
-    message: String = "No data available",
+    message: String = stringResource(R.string.no_data_available),
     subtitle: String? = null,
     icon: ImageVector = Icons.Default.Info,
     actionText: String? = null,
-    onActionClick: (() -> Unit)? = null
+    onActionClick: (() -> Unit)? = null,
 ) {
     Box(
         modifier = Modifier

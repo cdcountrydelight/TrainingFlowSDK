@@ -6,6 +6,7 @@ import com.cd.trainingsdk.data.network.HttpClientManager
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
 import com.cd.trainingsdk.presentation.ImageLoader
+import com.cd.trainingsdk.presentation.ui.beans.LanguageBean
 
 internal object FunctionHelper {
 
@@ -31,6 +32,16 @@ internal object FunctionHelper {
                 }
             }
         }
+    }
+
+    fun getAllAvailableLanguages(): List<LanguageBean> {
+        val languagesList = mutableListOf<LanguageBean>()
+        languagesList.add(LanguageBean("English", "en"))
+        languagesList.add(LanguageBean("हिन्दी", "hi"))
+        languagesList.add(LanguageBean("తెలుగు", "te"))
+        languagesList.add(LanguageBean("தமிழ்", "ta"))
+        languagesList.add(LanguageBean("ಕನ್ನಡ", "kn"))
+        return languagesList
     }
 
     fun clearAll() {

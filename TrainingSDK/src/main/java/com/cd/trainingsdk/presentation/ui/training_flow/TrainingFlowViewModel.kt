@@ -15,11 +15,11 @@ import com.cd.trainingsdk.domain.contents.flow_list.FlowListResponseContent
 import com.cd.trainingsdk.domain.contents.qna_list.QnaResponseContent
 import com.cd.trainingsdk.domain.domain_utils.AppErrorCodes
 import com.cd.trainingsdk.domain.domain_utils.DataResponseStatus
-import com.cd.trainingsdk.domain.use_cases.TrainingCompletedUseCase
 import com.cd.trainingsdk.domain.use_cases.CompleteQnAUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowDetailsUseCase
 import com.cd.trainingsdk.domain.use_cases.GetFlowsListUseCase
 import com.cd.trainingsdk.domain.use_cases.GetQnAUseCase
+import com.cd.trainingsdk.domain.use_cases.TrainingCompletedUseCase
 import com.cd.trainingsdk.presentation.ImageLoader
 import com.cd.trainingsdk.presentation.base.BaseViewModel
 import com.cd.trainingsdk.presentation.ui.beans.ImageLoadRequest

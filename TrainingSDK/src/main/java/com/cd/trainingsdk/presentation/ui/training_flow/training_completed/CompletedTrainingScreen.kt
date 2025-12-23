@@ -426,22 +426,22 @@ private fun AnimatedScoreDisplay(calculatedScore: Double?) {
 private fun GradeIndicator(score: Double) {
     val (gradeText, gradeColor) = when {
         score >= 90 -> Pair(
-            "Excellent!",
+            stringResource(R.string.excellent),
             Color(0xFF4CAF50)
         )
 
         score >= 80 -> Pair(
-            "Great Job!",
+            stringResource(R.string.great_job),
             Color(0xFF8BC34A)
         )
 
         score >= 70 -> Pair(
-            "Good Work!",
+            stringResource(R.string.good_work),
             Color(0xFFFFC107)
         )
 
         else -> Pair(
-            "Completed!",
+            stringResource(R.string.completed_exclamatory),
             MaterialTheme.colorScheme.primary
         )
     }
@@ -501,7 +501,7 @@ private fun GlassmorphismCard(flowName: String?) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Congratulations! 🎉",
+                text = stringResource(R.string.congratulations),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -509,11 +509,11 @@ private fun GlassmorphismCard(flowName: String?) {
             )
             Text(
                 text = buildAnnotatedString {
-                    append("You have successfully completed training for ")
+                    append(stringResource(R.string.you_have_successfully_completed_training_for))
                     withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
                         append(flowName ?: stringResource(R.string.untitled_flow))
                     }
-                    append(". You can revisit this training anytime from the flow list")
+                    append(stringResource(R.string.you_can_revisit_this_training_anytime_from_the_flow_list))
                 },
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
