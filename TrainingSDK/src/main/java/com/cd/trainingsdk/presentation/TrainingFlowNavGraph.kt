@@ -1,8 +1,11 @@
 package com.cd.trainingsdk.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,6 +17,8 @@ import com.cd.trainingsdk.presentation.ui.training_flow.flow_details.FlowDetailS
 import com.cd.trainingsdk.presentation.ui.training_flow.flow_list.FlowListScreen
 import com.cd.trainingsdk.presentation.ui.training_flow.q_a.QnAScreen
 import com.cd.trainingsdk.presentation.ui.training_flow.training_completed.CompletedTrainingScreen
+import com.cd.trainingsdk.presentation.ui.utils.LanguageHelper
+import com.cd.trainingsdk.presentation.ui.utils.withSdkLocale
 
 @Composable
 fun TrainingFlowNavGraph(
@@ -26,78 +31,86 @@ fun TrainingFlowNavGraph(
     isProdEnv: Boolean,
     onBackPressed: () -> Unit,
 ) {
-
     val viewModel: TrainingFlowViewModel = viewModel()
+    val baseContext = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.setUnAuthorizedCodes(unAuthorizedExceptionCodes, isProdEnv)
+        LanguageHelper.setSelectedLanguage(baseContext)
     }
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = FlowListScreenDestination
-    ) {
 
-        composable<FlowListScreenDestination> {
-            FlowListScreen(
-                authToken = authToken,
-                appName = appName,
-                packageName = packageName,
-                viewModel = viewModel,
-                onFlowSelected = { ->
-                    viewModel.resetFlowDetailsState()
-                    navController.navigate(FlowDetailsScreenDestination)
-                },
-                onBackClicked = onBackPressed
-            )
-        }
+    val localizedContext = remember(LanguageHelper.selectedLanguage) {
+        baseContext.withSdkLocale(LanguageHelper.selectedLanguage)
+    }
+    CompositionLocalProvider(LocalContext provides localizedContext) {
+        NavHost(
+            modifier = modifier,
+            navController = navController,
+            startDestination = FlowListScreenDestination
+        ) {
 
-        composable<FlowDetailsScreenDestination> {
-            FlowDetailScreen(
-                viewModel = viewModel,
-                onBackClicked = {
-                    navController.popBackStack()
-                },
-                onNavigateToQnASection = {
-                    navController.navigate(QnAScreenDestination) {
-                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
-                            inclusive = true
+            composable<FlowListScreenDestination> {
+                FlowListScreen(
+                    authToken = authToken,
+                    appName = appName,
+                    packageName = packageName,
+                    viewModel = viewModel,
+                    onFlowSelected = { ->
+                        viewModel.resetFlowDetailsState()
+                        navController.navigate(FlowDetailsScreenDestination)
+                    },
+                    onBackClicked = onBackPressed
+                )
+            }
+
+            composable<FlowDetailsScreenDestination> {
+                FlowDetailScreen(
+                    viewModel = viewModel,
+                    onBackClicked = {
+                        navController.popBackStack()
+                    },
+                    onNavigateToQnASection = {
+                        navController.navigate(QnAScreenDestination) {
+                            popUpTo(navController.currentDestination?.id ?: return@navigate) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    onNavigateToCompleteTrainingFlow = {
+                        navController.navigate(CompletedTrainingScreenDestination(null)) {
+                            popUpTo(navController.currentDestination?.id ?: return@navigate) {
+                                inclusive = true
+                            }
                         }
                     }
-                },
-                onNavigateToCompleteTrainingFlow = {
-                    navController.navigate(CompletedTrainingScreenDestination(null)) {
-                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
-                            inclusive = true
+                )
+            }
+
+            composable<QnAScreenDestination> {
+                QnAScreen(
+                    viewModel = viewModel,
+                    onNavigateToCompleteTraining = {
+                        navController.navigate(CompletedTrainingScreenDestination(it)) {
+                            popUpTo(navController.currentDestination?.id ?: return@navigate) {
+                                inclusive = true
+                            }
                         }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        composable<QnAScreenDestination> {
-            QnAScreen(
-                viewModel = viewModel,
-                onNavigateToCompleteTraining = {
-                    navController.navigate(CompletedTrainingScreenDestination(it)) {
-                        popUpTo(navController.currentDestination?.id ?: return@navigate) {
-                            inclusive = true
-                        }
+            composable<CompletedTrainingScreenDestination> { backStack ->
+                val calculatedScore =
+                    backStack.toRoute<CompletedTrainingScreenDestination>().calculatedScore
+                CompletedTrainingScreen(
+                    viewModel = viewModel,
+                    calculatedScore = calculatedScore,
+                    onGoToHome = onBackPressed,
+                    onStartNextFlow = {
+                        navController.popBackStack(FlowListScreenDestination, false)
                     }
-                }
-            )
-        }
-
-        composable<CompletedTrainingScreenDestination> { backStack ->
-            val calculatedScore =
-                backStack.toRoute<CompletedTrainingScreenDestination>().calculatedScore
-            CompletedTrainingScreen(
-                viewModel = viewModel,
-                calculatedScore = calculatedScore,
-                onGoToHome = onBackPressed,
-                onStartNextFlow = {
-                    navController.popBackStack(FlowListScreenDestination, false)
-                }
-            )
+                )
+            }
         }
     }
 }

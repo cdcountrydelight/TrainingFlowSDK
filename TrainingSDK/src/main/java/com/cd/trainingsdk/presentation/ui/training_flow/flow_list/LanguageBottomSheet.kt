@@ -28,6 +28,7 @@ import com.cd.trainingsdk.domain.domain_utils.SharedPreferenceHelper
 import com.cd.trainingsdk.presentation.ui.beans.LanguageBean
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight16
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper
+import com.cd.trainingsdk.presentation.ui.utils.LanguageHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +64,8 @@ private fun LanguagesList(onLanguageSelected: (String) -> Unit) {
         items(allLanguagesList, key = { it.code }) {
             LanguageItem(it, sharedPreferenceHelper.selectedLanguageCode == it.code) {
                 sharedPreferenceHelper.selectedLanguageCode = it.code
+                sharedPreferenceHelper.isLanguageSet = true
+                LanguageHelper.selectedLanguage = it.code
                 onLanguageSelected(it.code)
             }
         }

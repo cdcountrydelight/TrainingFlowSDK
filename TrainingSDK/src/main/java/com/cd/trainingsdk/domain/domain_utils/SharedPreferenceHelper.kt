@@ -12,10 +12,21 @@ internal class SharedPreferenceHelper(private val context: Context) {
 
     companion object {
         private const val SELECTED_LANGUAGE_CODE = "selected_language_code"
+        private const val IS_LANGUAGE_SET = "is_language_set"
         fun getSharedPreference(context: Context): SharedPreferenceHelper {
             return SharedPreferenceHelper(context)
         }
     }
+
+    var isLanguageSet: Boolean
+        get() {
+            return sharedPreferences.getBoolean(IS_LANGUAGE_SET, true)
+        }
+        set(newValue) {
+            sharedPreferences.edit {
+                putBoolean(IS_LANGUAGE_SET, newValue)
+            }
+        }
 
     var selectedLanguageCode: String
         get() {
