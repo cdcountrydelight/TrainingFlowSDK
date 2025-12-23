@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error">त्रुटि</string>
+    <string name="something_went_wrong_please_try_again_later">कुछ गलत हो गया। कृपया बाद में पुनः प्रयास करें।</string>
+    <string name="no_internet_connection_please_make_sure_your_device_is_connected_to_an_active_internet_connection">इंटरनेट कनेक्शन नहीं है। कृपया सुनिश्चित करें कि आपका डिवाइस सक्रिय इंटरनेट से जुड़ा हुआ है।</string>
+    <string name="try_again">फिर से प्रयास करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="please_enter_a_valid_mobile_number">कृपया एक मान्य मोबाइल नंबर दर्ज करें।</string>
+    <string name="list_of_the_flows_available_for_this_app">इस ऐप के लिए उपलब्ध फ्लो की सूची</string>
+    <string name="ok">ठीक है</string>
+    <string name="no_description_available">कोई विवरण उपलब्ध नहीं है</string>
+    <string name="steps">%1$d चरण</string>
+    <string name="untitled_flow">शीर्षक रहित फ्लो</string>
+    <string name="completed">पूर्ण</string>
+    <string name="available_flows">उपलब्ध फ्लो</string>
+    <string name="training_platform">प्रशिक्षण प्लेटफ़ॉर्म</string>
+    <string name="not_started">शुरू नहीं हुआ</string>
+    <string name="no_training_flows_available">कोई प्रशिक्षण फ्लो उपलब्ध नहीं है</string>
+    <string name="go_back">वापस जाएं</string>
+    <string name="there_are_currently_no_training_flows_configured_for_please_check_back_later_or_contact_your_administrator">वर्तमान में %1$s के लिए कोई प्रशिक्षण फ्लो कॉन्फ़िगर नहीं किया गया है। कृपया बाद में जांचें या अपने प्रशासक से संपर्क करें।</string>
+    <string name="flow_details_not_found">फ्लो विवरण नहीं मिला</string>
+    <string name="no_steps_available">कोई चरण उपलब्ध नहीं है</string>
+    <string name="this_training_flow_doesn_t_have_any_steps_configured_yet">इस प्रशिक्षण फ्लो में अभी कोई चरण कॉन्फ़िगर नहीं किया गया है।</string>
+    <string name="start_next_flow">अगला फ्लो शुरू करें</string>
+    <string name="go_to_home">होम जाएं</string>
+    <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">बधाई हो! आपने यह प्रशिक्षण सफलतापूर्वक पूरा कर लिया है। आप इसे कभी भी फ्लो सूची से फिर से देख सकते हैं।</string>
+    <string name="pending">लंबित</string>
+    <string name="no_data_available">कोई डेटा उपलब्ध नहीं है</string>
+    <string name="select_language_for_training">प्रशिक्षण के लिए भाषा चुनें</string>
+    <string name="quick_check">त्वरित जांच</string>
+    <string name="previous">पिछला</string>
+    <string name="please_select_answer_for_this_question">कृपया इस प्रश्न के लिए उत्तर चुनें</string>
+    <string name="next">अगला</string>
+    <string name="congratulations">बधाई हो! 🎉</string>
+    <string name="you_have_successfully_completed_training_for">आपने सफलतापूर्वक प्रशिक्षण पूरा कर लिया है: </string>
+    <string name="you_can_revisit_this_training_anytime_from_the_flow_list">। आप इसे कभी भी फ्लो सूची से फिर से देख सकते हैं।</string>
+    <string name="excellent">उत्कृष्ट!</string>
+    <string name="great_job">बहुत बढ़िया!</string>
+    <string name="good_work">अच्छा काम!</string>
+    <string name="completed_exclamatory">पूरा हुआ!</string>
+    <string name="failed_to_load_image">छवि लोड करने में विफल</string>
+</resources>

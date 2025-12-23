@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error">లోపం</string>
+    <string name="something_went_wrong_please_try_again_later">ఏదో తప్పు జరిగింది. దయచేసి తరువాత ప్రయత్నించండి.</string>
+    <string name="no_internet_connection_please_make_sure_your_device_is_connected_to_an_active_internet_connection">ఇంటర్నెట్ కనెక్షన్ లేదు. మీ పరికరం సక్రియమైన ఇంటర్నెట్‌కు కనెక్ట్ అయిందో లేదో తనిఖీ చేయండి.</string>
+    <string name="try_again">మళ్లీ ప్రయత్నించండి</string>
+    <string name="cancel">రద్దు</string>
+    <string name="please_enter_a_valid_mobile_number">దయచేసి చెల్లుబాటు అయ్యే మొబైల్ నంబర్‌ను నమోదు చేయండి.</string>
+    <string name="list_of_the_flows_available_for_this_app">ఈ యాప్‌కు అందుబాటులో ఉన్న ఫ్లోల జాబితా</string>
+    <string name="ok">సరే</string>
+    <string name="no_description_available">వివరణ అందుబాటులో లేదు</string>
+    <string name="steps">%1$d దశలు</string>
+    <string name="untitled_flow">శీర్షిక లేని ఫ్లో</string>
+    <string name="completed">పూర్తైంది</string>
+    <string name="available_flows">అందుబాటులో ఉన్న ఫ్లోలు</string>
+    <string name="training_platform">శిక్షణ వేదిక</string>
+    <string name="not_started">ప్రారంభించలేదు</string>
+    <string name="no_training_flows_available">శిక్షణ ఫ్లోలు లభ్యం కావు</string>
+    <string name="go_back">వెనక్కి వెళ్లండి</string>
+    <string name="there_are_currently_no_training_flows_configured_for_please_check_back_later_or_contact_your_administrator">ప్రస్తుతం %1$s కోసం శిక్షణ ఫ్లోలు కాన్ఫిగర్ చేయబడలేదు. దయచేసి తరువాత తనిఖీ చేయండి లేదా నిర్వాహకుడిని సంప్రదించండి.</string>
+    <string name="flow_details_not_found">ఫ్లో వివరాలు లభించలేదు</string>
+    <string name="no_steps_available">దశలు లభ్యం కావు</string>
+    <string name="this_training_flow_doesn_t_have_any_steps_configured_yet">ఈ శిక్షణ ఫ్లోకు ఇంకా దశలు కాన్ఫిగర్ చేయలేదు.</string>
+    <string name="start_next_flow">తదుపరి ఫ్లో ప్రారంభించండి</string>
+    <string name="go_to_home">హోమ్‌కు వెళ్లండి</string>
+    <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">అభినందనలు! మీరు ఈ శిక్షణను విజయవంతంగా పూర్తి చేశారు. ఫ్లో జాబితా నుండి ఎప్పుడైనా మళ్లీ చూడవచ్చు.</string>
+    <string name="pending">పెండింగ్‌లో ఉంది</string>
+    <string name="no_data_available">డేటా అందుబాటులో లేదు</string>
+    <string name="select_language_for_training">శిక్షణ కోసం భాషను ఎంచుకోండి</string>
+    <string name="quick_check">త్వరిత తనిఖీ</string>
+    <string name="previous">మునుపటి</string>
+    <string name="please_select_answer_for_this_question">ఈ ప్రశ్నకు సమాధానం ఎంచుకోండి</string>
+    <string name="next">తదుపరి</string>
+    <string name="congratulations">అభినందనలు! 🎉</string>
+    <string name="you_have_successfully_completed_training_for">మీరు విజయవంతంగా శిక్షణను పూర్తి చేశారు: </string>
+    <string name="you_can_revisit_this_training_anytime_from_the_flow_list">. ఫ్లో జాబితా నుండి ఎప్పుడైనా మళ్లీ చూడవచ్చు</string>
+    <string name="excellent">అద్భుతం!</string>
+    <string name="great_job">చాలా బాగుంది!</string>
+    <string name="good_work">మంచి పని!</string>
+    <string name="completed_exclamatory">పూర్తైంది!</string>
+    <string name="failed_to_load_image">చిత్రాన్ని లోడ్ చేయడం విఫలమైంది</string>
+</resources>
