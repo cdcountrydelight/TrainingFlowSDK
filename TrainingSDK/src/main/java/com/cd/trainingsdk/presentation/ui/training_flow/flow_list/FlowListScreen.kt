@@ -69,7 +69,6 @@ import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FlowListScreen(
@@ -438,26 +437,39 @@ private fun StatusCard(flows: List<FlowListResponseContent>) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            StatusCardItem(stringResource(R.string.available_flows), flows.size)
+            StatusCardItem(
+                stringResource(R.string.available_flows),
+                flows.size,
+                modifier = Modifier.weight(1f)
+            )
             StatusCardItemDivider()
             val completedCount =
                 flows.count { it.userProgress?.isCompleted == true }
-            StatusCardItem(stringResource(R.string.completed), completedCount)
+            StatusCardItem(
+                stringResource(R.string.completed),
+                completedCount,
+                modifier = Modifier.weight(1f)
+            )
             StatusCardItemDivider()
             val inProgressCount = flows.count {
                 it.userProgress?.isStarted == true &&
                         it.userProgress.isCompleted != true
             }
-            StatusCardItem(stringResource(R.string.pending), inProgressCount)
+            StatusCardItem(
+                stringResource(R.string.pending),
+                inProgressCount,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
 
 
 @Composable
-private fun StatusCardItem(text: String, count: Int) {
+private fun StatusCardItem(text: String, count: Int, modifier: Modifier = Modifier) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ) {
         Text(
             text = "$count",

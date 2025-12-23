@@ -15,6 +15,14 @@ internal object LanguageHelper {
         if (sharedPreference.isLanguageSet) {
             selectedLanguage = sharedPreference.selectedLanguageCode
         } else {
+            val languageCode = try {
+                context.resources?.configuration?.locales[0]?.language ?: "en"
+            } catch (_: Exception) {
+                "en"
+            }
+            if (languageCode in FunctionHelper.getAllAvailableLanguages().map { it.code }) {
+                sharedPreference.selectedLanguageCode = languageCode
+            }
             selectedLanguage = sharedPreference.selectedLanguageCode
         }
     }

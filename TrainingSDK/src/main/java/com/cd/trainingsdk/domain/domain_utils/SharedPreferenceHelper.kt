@@ -20,7 +20,7 @@ internal class SharedPreferenceHelper(private val context: Context) {
 
     var isLanguageSet: Boolean
         get() {
-            return sharedPreferences.getBoolean(IS_LANGUAGE_SET, true)
+            return sharedPreferences.getBoolean(IS_LANGUAGE_SET, false)
         }
         set(newValue) {
             sharedPreferences.edit {
