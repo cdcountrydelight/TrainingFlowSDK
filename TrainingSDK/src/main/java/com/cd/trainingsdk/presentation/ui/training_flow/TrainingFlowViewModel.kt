@@ -78,8 +78,7 @@ internal class TrainingFlowViewModel : BaseViewModel() {
 
     fun getFlowsList(context: Context, authToken: String, packageName: String) {
         authenticationToken = authToken
-        if (_flowsListDetailStateFlow.value is DataUiResponseStatus.Success) return
-        _flowsListDetailStateFlow.value = DataUiResponseStatus.Companion.loading()
+        _flowsListDetailStateFlow.value = DataUiResponseStatus.loading()
         backgroundCall {
             _flowsListDetailStateFlow.value =
                 GetFlowsListUseCase().invoke(context, packageName, authenticationToken, isProdEnv)

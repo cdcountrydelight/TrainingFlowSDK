@@ -289,7 +289,9 @@ private fun FlowsList(
                                 .windowInsetsPadding(WindowInsets.statusBars)
                                 .padding(horizontal = 20.dp)
                                 .padding(top = 16.dp)
-                        )
+                        ) {
+                            viewModel.getFlowsList(context, authToken, packageName)
+                        }
                     }
                     StatusCard(flows)
                 }
@@ -313,7 +315,7 @@ private fun FlowsList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HeaderSection(appName: String, modifier: Modifier) {
+private fun HeaderSection(appName: String, modifier: Modifier, onGetFlowList: () -> Unit) {
     var showLanguageBottomSheet by remember { mutableStateOf(false) }
 
     Row(
@@ -399,6 +401,7 @@ private fun HeaderSection(appName: String, modifier: Modifier) {
     if (showLanguageBottomSheet) {
         LanguageBottomSheet(
             onLanguageSelected = {
+                onGetFlowList()
                 showLanguageBottomSheet = false
             },
             onDismiss = {

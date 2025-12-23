@@ -19,23 +19,30 @@ internal object HttpClientManager {
     @Volatile
     private var httpClient: HttpClient? = null
 
-    fun getInstance(context: Context, authToken: String, isProdEnv: Boolean): HttpClient {
+    fun getInstance(
+        context: Context,
+        authToken: String,
+        isProdEnv: Boolean,
+    ): HttpClient {
         return httpClient ?: synchronized(this) {
-            httpClient ?: createHttpClient(context, authToken, isProdEnv).also { httpClient = it }
+            httpClient ?: createHttpClient(
+                context,
+                authToken,
+                isProdEnv,
+            ).also { httpClient = it }
         }
     }
 
     private fun createHttpClient(
         context: Context,
         authToken: String,
-        isProdEnv: Boolean
+        isProdEnv: Boolean,
     ): HttpClient {
         val engine = OkHttp.create {
             if (!isProdEnv) {
                 addInterceptor(getChuckerInterceptor(context))
             }
             addInterceptor(LibraryNetworkInterceptorImpl(context))
-
         }
         return HttpClient(engine) {
             install(ContentNegotiation) {

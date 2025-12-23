@@ -33,7 +33,7 @@ import com.cd.trainingsdk.presentation.ui.utils.LanguageHelper
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LanguageBottomSheet(
-    onLanguageSelected: (String) -> Unit,
+    onLanguageSelected: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
@@ -52,7 +52,7 @@ internal fun LanguageBottomSheet(
 }
 
 @Composable
-private fun LanguagesList(onLanguageSelected: (String) -> Unit) {
+private fun LanguagesList(onLanguageSelected: () -> Unit) {
     val allLanguagesList = remember {
         FunctionHelper.getAllAvailableLanguages()
     }
@@ -60,13 +60,14 @@ private fun LanguagesList(onLanguageSelected: (String) -> Unit) {
     val sharedPreferenceHelper = remember {
         SharedPreferenceHelper.getSharedPreference(context)
     }
+
     LazyColumn(Modifier.fillMaxWidth()) {
         items(allLanguagesList, key = { it.code }) {
             LanguageItem(it, sharedPreferenceHelper.selectedLanguageCode == it.code) {
                 sharedPreferenceHelper.selectedLanguageCode = it.code
                 sharedPreferenceHelper.isLanguageSet = true
                 LanguageHelper.selectedLanguage = it.code
-                onLanguageSelected(it.code)
+                onLanguageSelected()
             }
         }
     }

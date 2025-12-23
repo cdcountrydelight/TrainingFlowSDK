@@ -35,8 +35,8 @@ fun TrainingFlowNavGraph(
     val baseContext = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.setUnAuthorizedCodes(unAuthorizedExceptionCodes, isProdEnv)
         LanguageHelper.setSelectedLanguage(baseContext)
+        viewModel.setUnAuthorizedCodes(unAuthorizedExceptionCodes, isProdEnv)
     }
 
     val localizedContext = remember(LanguageHelper.selectedLanguage) {
