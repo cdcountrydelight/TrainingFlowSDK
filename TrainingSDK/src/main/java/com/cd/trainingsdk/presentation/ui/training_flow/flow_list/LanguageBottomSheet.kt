@@ -48,7 +48,7 @@ internal fun LanguageBottomSheet(
                 maxLines = 1,
             )
             SpacerHeight16()
-            LanguagesList(onLanguageSelected)
+            LanguagesList(onLanguageSelected, onDismiss)
         }
     }
 }
@@ -64,7 +64,7 @@ private fun selectLanguageTitle(context: Context, languageCode: String): String 
 }
 
 @Composable
-private fun LanguagesList(onLanguageSelected: () -> Unit) {
+private fun LanguagesList(onLanguageSelected: () -> Unit, onDismiss: () -> Unit) {
     val allLanguagesList = remember {
         FunctionHelper.getAllAvailableLanguages()
     }
@@ -76,6 +76,10 @@ private fun LanguagesList(onLanguageSelected: () -> Unit) {
     LazyColumn(Modifier.fillMaxWidth()) {
         items(allLanguagesList, key = { it.code }) {
             LanguageItem(it, sharedPreferenceHelper.selectedLanguageCode == it.code) {
+                if (sharedPreferenceHelper.isLanguageSet && sharedPreferenceHelper.selectedLanguageCode == it.code) {
+                    onDismiss()
+                    return@LanguageItem
+                }
                 sharedPreferenceHelper.selectedLanguageCode = it.code
                 sharedPreferenceHelper.isLanguageSet = true
                 LanguageHelper.selectedLanguage = it.code
