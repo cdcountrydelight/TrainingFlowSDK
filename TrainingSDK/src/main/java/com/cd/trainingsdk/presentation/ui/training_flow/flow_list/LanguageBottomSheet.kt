@@ -85,10 +85,8 @@ private fun LanguagesList(onLanguageSelected: () -> Unit, onDismiss: () -> Unit)
                 sharedPreferenceHelper.selectedLanguageCode = it.code
                 sharedPreferenceHelper.isLanguageSet = true
                 LanguageHelper.selectedLanguage = it.code
-                TextToSpeechManager.getInstance(
-                    context,
-                    TTSLanguages.getTTSLanguageFromLanguageCode(it.code).locale
-                )
+                TextToSpeechManager.getInstance(context)
+                    .setLanguage(TTSLanguages.getTTSLanguage(it.code).locale)
                 onLanguageSelected()
             }
         }

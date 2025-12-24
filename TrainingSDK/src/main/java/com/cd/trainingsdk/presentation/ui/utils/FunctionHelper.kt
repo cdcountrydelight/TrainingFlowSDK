@@ -37,10 +37,10 @@ internal object FunctionHelper {
     fun getAllAvailableLanguages(): List<LanguageBean> {
         val languagesList = mutableListOf<LanguageBean>()
         languagesList.add(LanguageBean("English", "en"))
-        languagesList.add(LanguageBean("हिन्दी", "hi"))
-        languagesList.add(LanguageBean("తెలుగు", "te"))
-        languagesList.add(LanguageBean("தமிழ்", "ta"))
-        languagesList.add(LanguageBean("ಕನ್ನಡ", "kn"))
+        languagesList.add(LanguageBean("Hindi (हिन्दी)", "hi"))
+        languagesList.add(LanguageBean("Telugu (తెలుగు)", "te"))
+        languagesList.add(LanguageBean("Tamil (தமிழ்)", "ta"))
+        languagesList.add(LanguageBean("Kannada (ಕನ್ನಡ)", "kn"))
         return languagesList
     }
 

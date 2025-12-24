@@ -27,7 +27,7 @@ internal object LanguageHelper {
         }
         TextToSpeechManager.getInstance(
             context,
-            TTSLanguages.getTTSLanguageFromLanguageCode(selectedLanguage).locale
+            TTSLanguages.getTTSLanguage(selectedLanguage).locale
         )
     }
 }
