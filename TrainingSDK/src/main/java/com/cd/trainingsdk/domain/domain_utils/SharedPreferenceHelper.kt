@@ -3,7 +3,8 @@ package com.cd.trainingsdk.domain.domain_utils
 import android.content.Context
 import androidx.core.content.edit
 
-internal class SharedPreferenceHelper(private val context: Context) {
+internal class SharedPreferenceHelper(context: Context) {
+
     private val sharedPreferences =
         context.getSharedPreferences(
             "${context.packageName}.trainingsdk.shared_pref",
@@ -11,10 +12,20 @@ internal class SharedPreferenceHelper(private val context: Context) {
         )
 
     companion object {
+
         private const val SELECTED_LANGUAGE_CODE = "selected_language_code"
+
         private const val IS_LANGUAGE_SET = "is_language_set"
+
+        @Volatile
+        private var INSTANCE: SharedPreferenceHelper? = null
+
         fun getSharedPreference(context: Context): SharedPreferenceHelper {
-            return SharedPreferenceHelper(context)
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: SharedPreferenceHelper(context).also {
+                    INSTANCE = it
+                }
+            }
         }
     }
 

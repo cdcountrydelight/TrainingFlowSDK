@@ -239,7 +239,7 @@ private fun FlowsList(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            item {
+            stickyHeader {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
