@@ -1,7 +1,7 @@
 package com.cd.trainingsdk.presentation.ui.training_flow.flow_list
 
+import android.content.Context
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cd.trainingsdk.R
@@ -36,18 +36,30 @@ internal fun LanguageBottomSheet(
     onLanguageSelected: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            Row(modifier = Modifier.fillMaxWidth(), Arrangement.Center) {
-                Text(
-                    stringResource(R.string.select_language_for_training),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                selectLanguageTitle(context, LanguageHelper.selectedLanguage),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+            )
             SpacerHeight16()
             LanguagesList(onLanguageSelected)
         }
+    }
+}
+
+private fun selectLanguageTitle(context: Context, languageCode: String): String {
+    return when (languageCode) {
+        "hi" -> context.getString(R.string.select_language_for_training_hi)
+        "te" -> context.getString(R.string.select_language_for_training_te)
+        "ta" -> context.getString(R.string.select_language_for_training_ta)
+        "kn" -> context.getString(R.string.select_language_for_training_kn)
+        else -> context.getString(R.string.select_language_for_training_en)
     }
 }
 
