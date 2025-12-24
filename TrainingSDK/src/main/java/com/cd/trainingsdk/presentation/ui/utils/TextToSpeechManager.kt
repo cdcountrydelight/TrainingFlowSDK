@@ -1,5 +1,6 @@
 package com.cd.trainingsdk.presentation.ui.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.speech.tts.TextToSpeech
@@ -13,6 +14,7 @@ internal class TextToSpeechManager(private val context: Context, private val loc
     private var isInitialized = false
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var INSTANCE: TextToSpeechManager? = null
 
