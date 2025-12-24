@@ -29,6 +29,8 @@ import com.cd.trainingsdk.presentation.ui.beans.LanguageBean
 import com.cd.trainingsdk.presentation.ui.common.SpacerHeight16
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper
 import com.cd.trainingsdk.presentation.ui.utils.LanguageHelper
+import com.cd.trainingsdk.presentation.ui.utils.TTSLanguages
+import com.cd.trainingsdk.presentation.ui.utils.TextToSpeechManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,6 +85,10 @@ private fun LanguagesList(onLanguageSelected: () -> Unit, onDismiss: () -> Unit)
                 sharedPreferenceHelper.selectedLanguageCode = it.code
                 sharedPreferenceHelper.isLanguageSet = true
                 LanguageHelper.selectedLanguage = it.code
+                TextToSpeechManager.getInstance(
+                    context,
+                    TTSLanguages.getTTSLanguageFromLanguageCode(it.code).locale
+                )
                 onLanguageSelected()
             }
         }

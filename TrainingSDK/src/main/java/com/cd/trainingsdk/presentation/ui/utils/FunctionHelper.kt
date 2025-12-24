@@ -47,5 +47,6 @@ internal object FunctionHelper {
     fun clearAll() {
         HttpClientManager.clearInstance()
         ImageLoader.clear()
+        TextToSpeechManager.shutdown()
     }
 }

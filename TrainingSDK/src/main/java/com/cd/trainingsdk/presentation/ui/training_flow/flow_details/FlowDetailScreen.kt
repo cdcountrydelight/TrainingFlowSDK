@@ -80,6 +80,7 @@ import com.cd.trainingsdk.presentation.ui.common.SpacerHeight12
 import com.cd.trainingsdk.presentation.ui.training_flow.TrainingFlowViewModel
 import com.cd.trainingsdk.presentation.ui.utils.DataUiResponseStatus
 import com.cd.trainingsdk.presentation.ui.utils.FunctionHelper.getErrorMessage
+import com.cd.trainingsdk.presentation.ui.utils.TextToSpeechManager
 import kotlinx.coroutines.delay
 import kotlin.math.min
 
@@ -88,7 +89,7 @@ internal fun FlowDetailScreen(
     viewModel: TrainingFlowViewModel,
     onBackClicked: () -> Unit,
     onNavigateToQnASection: () -> Unit,
-    onNavigateToCompleteTrainingFlow: () -> Unit
+    onNavigateToCompleteTrainingFlow: () -> Unit,
 ) {
 
     val steps = remember {
@@ -145,7 +146,7 @@ internal fun FlowDetailScreen(
 private fun HandleQuestionAndAnswerStateFlow(
     viewModel: TrainingFlowViewModel,
     onNavigateToQnASection: () -> Unit,
-    onNavigateToCompleteTrainingFlow: () -> Unit
+    onNavigateToCompleteTrainingFlow: () -> Unit,
 ) {
 
     val qnaStateFlow = viewModel.qnaStateFlow.collectAsStateWithLifecycle()
@@ -200,7 +201,7 @@ private fun HandleQuestionAndAnswerStateFlow(
 private fun StepDetailContent(
     viewModel: TrainingFlowViewModel,
     step: StepsResponseContent,
-    onAnnotationClick: () -> Unit
+    onAnnotationClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val imageRequest = remember(step.screenshotUrl) {
@@ -453,6 +454,10 @@ private fun InstructionsSection(step: StepsResponseContent) {
         }
     }
 
+    LaunchedEffect(currentTooltipIndex) {
+        TextToSpeechManager.speak(step.instructions[safeIndex])
+    }
+
     Row(
         modifier = Modifier
             .padding(8.dp)
@@ -599,7 +604,7 @@ fun BlurredOverlay(
     width: Dp,
     height: Dp,
     shape: Shape,
-    blurRadius: Dp = 20.dp
+    blurRadius: Dp = 20.dp,
 ) {
     Box(
         modifier = Modifier

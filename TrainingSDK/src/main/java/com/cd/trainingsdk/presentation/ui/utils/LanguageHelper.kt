@@ -25,5 +25,9 @@ internal object LanguageHelper {
             }
             selectedLanguage = sharedPreference.selectedLanguageCode
         }
+        TextToSpeechManager.getInstance(
+            context,
+            TTSLanguages.getTTSLanguageFromLanguageCode(selectedLanguage).locale
+        )
     }
 }
