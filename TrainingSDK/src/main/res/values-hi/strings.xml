@@ -26,7 +26,6 @@
     <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">बधाई हो! आपने यह प्रशिक्षण सफलतापूर्वक पूरा कर लिया है। आप इसे कभी भी फ्लो सूची से फिर से देख सकते हैं।</string>
     <string name="pending">लंबित</string>
     <string name="no_data_available">कोई डेटा उपलब्ध नहीं है</string>
-    <string name="select_language_for_training">प्रशिक्षण के लिए भाषा चुनें</string>
     <string name="quick_check">त्वरित जांच</string>
     <string name="previous">पिछला</string>
     <string name="please_select_answer_for_this_question">कृपया इस प्रश्न के लिए उत्तर चुनें</string>
@@ -39,4 +38,7 @@
     <string name="good_work">अच्छा काम!</string>
     <string name="completed_exclamatory">पूरा हुआ!</string>
     <string name="failed_to_load_image">छवि लोड करने में विफल</string>
+    <string name="training">प्रशिक्षण</string>
+    <string name="score">अंक</string>
+    <string name="status">स्थिति</string>
 </resources>

@@ -26,7 +26,6 @@
     <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">வாழ்த்துகள்! இந்த பயிற்சியை நீங்கள் வெற்றிகரமாக முடித்துவிட்டீர்கள். ஓட்ட பட்டியலில் இருந்து எப்போது வேண்டுமானாலும் மீண்டும் பார்க்கலாம்.</string>
     <string name="pending">நிலுவையில்</string>
     <string name="no_data_available">தகவல் கிடைக்கவில்லை</string>
-    <string name="select_language_for_training">பயிற்சிக்கான மொழியை தேர்வு செய்யவும்</string>
     <string name="quick_check">விரைவு சோதனை</string>
     <string name="previous">முந்தைய</string>
     <string name="please_select_answer_for_this_question">இந்த கேள்விக்கு பதிலை தேர்வு செய்யவும்</string>
@@ -39,4 +38,8 @@
     <string name="good_work">நல்ல வேலை!</string>
     <string name="completed_exclamatory">முடிந்தது!</string>
     <string name="failed_to_load_image">படத்தை ஏற்ற முடியவில்லை</string>
+    <string name="training">பயிற்சி</string>
+    <string name="score">மதிப்பெண்</string>
+    <string name="status">நிலை</string>
+
 </resources>

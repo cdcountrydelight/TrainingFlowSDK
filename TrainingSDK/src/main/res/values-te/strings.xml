@@ -26,7 +26,6 @@
     <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">అభినందనలు! మీరు ఈ శిక్షణను విజయవంతంగా పూర్తి చేశారు. ఫ్లో జాబితా నుండి ఎప్పుడైనా మళ్లీ చూడవచ్చు.</string>
     <string name="pending">పెండింగ్‌లో ఉంది</string>
     <string name="no_data_available">డేటా అందుబాటులో లేదు</string>
-    <string name="select_language_for_training">శిక్షణ కోసం భాషను ఎంచుకోండి</string>
     <string name="quick_check">త్వరిత తనిఖీ</string>
     <string name="previous">మునుపటి</string>
     <string name="please_select_answer_for_this_question">ఈ ప్రశ్నకు సమాధానం ఎంచుకోండి</string>
@@ -39,4 +38,8 @@
     <string name="good_work">మంచి పని!</string>
     <string name="completed_exclamatory">పూర్తైంది!</string>
     <string name="failed_to_load_image">చిత్రాన్ని లోడ్ చేయడం విఫలమైంది</string>
+    <string name="training">శిక్షణ</string>
+    <string name="score">స్కోర్</string>
+    <string name="status">స్థితి</string>
+
 </resources>

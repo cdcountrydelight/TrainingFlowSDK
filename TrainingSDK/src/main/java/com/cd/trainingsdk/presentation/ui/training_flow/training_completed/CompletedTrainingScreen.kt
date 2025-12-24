@@ -487,15 +487,15 @@ private fun TrainingSummaryCard(score: Double?, flowName: String?) {
             .padding(16.dp)
     ) {
         SummaryRow(
-            label = "Training",
+            label = stringResource(R.string.training),
             value = flowName ?: "-"
         )
         SummaryRow(
-            label = "Score",
-            value = score?.let { "${it.toInt()}%" } ?: "Completed"
+            label = stringResource(R.string.score),
+            value = score?.let { "${it.toInt()}%" } ?: stringResource(R.string.completed)
         )
         SummaryRow(
-            label = "Status",
+            label = stringResource(R.string.status),
             value = stringResource(R.string.completed)
         )
     }

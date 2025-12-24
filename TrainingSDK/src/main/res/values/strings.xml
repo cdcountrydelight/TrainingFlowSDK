@@ -6,7 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number.</string>
     <string name="list_of_the_flows_available_for_this_app">List of the flows available for this app</string>
-    <string name="ok" tools:ignore="ButtonCase">Ok</string>
+    <string name="ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="no_description_available">No description available</string>
     <string name="steps">%1$d steps</string>
     <string name="untitled_flow">Untitled Flow</string>
@@ -25,13 +25,11 @@
     <string name="congratulations_you_have_successfully_completed_this_training_you_can_revisit_this_training_anytime_from_the_flow_list">Congratulations! You have successfully completed this training. You can revisit this training anytime from the flow list.</string>
     <string name="pending">Pending</string>
     <string name="no_data_available">No data available</string>
-
     <string name="select_language_for_training_en">Select Language for Training</string>
     <string name="select_language_for_training_hi">प्रशिक्षण के लिए भाषा चुनें</string>
     <string name="select_language_for_training_te">శిక్షణ కోసం భాషను ఎంచుకోండి</string>
     <string name="select_language_for_training_ta">பயிற்சிக்கான மொழியைத் தேர்ந்தெடுக்கவும்</string>
     <string name="select_language_for_training_kn">ತರಬೇತಿಗಾಗಿ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
-
     <string name="quick_check">Quick Check</string>
     <string name="previous">Previous</string>
     <string name="please_select_answer_for_this_question">Please select answer for this question</string>
@@ -44,4 +42,7 @@
     <string name="good_work">Good Work!</string>
     <string name="completed_exclamatory">Completed!</string>
     <string name="failed_to_load_image">Failed to load image</string>
+    <string name="training">Training</string>
+    <string name="score">Score</string>
+    <string name="status">Status</string>
 </resources>
